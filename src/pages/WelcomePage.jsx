@@ -6,7 +6,7 @@ function WelcomePage() {
     <div>
       <h1> Welcome to CS35L GroupHub </h1>
       <p>
-        A project management app for CS35L students to communicate, 
+        A project management app for CS35L students to communicate,
         schedule meetings, and organize group tasks.
       </p>
 
@@ -18,6 +18,6 @@ function WelcomePage() {
         <button>Sign Up</button>
       </Link>
     </div>
-    );
+  );
 }
 export default WelcomePage;
