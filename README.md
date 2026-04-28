@@ -1,3 +1,32 @@
+# Setup
+
+After cloning, install dependencies for both the frontend and the backend:
+
+```bash
+# Install frontend dependencies (from repo root)
+npm install
+
+# Install backend dependencies
+cd server && npm install && cd ..
+```
+
+## Running the app
+
+**Backend** (in one terminal):
+```bash
+cd server
+node index.js
+```
+
+**Frontend** (in another terminal, from repo root):
+```bash
+npm start
+```
+
+The frontend runs at `http://localhost:3000` and the backend at `http://localhost:5000` (or whichever port is configured in `server/index.js`).
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
