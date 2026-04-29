@@ -8,6 +8,7 @@ const router = express.Router();
 // TODO: Placeholder
 const JWT_SECRET = "cs35l-secret-key";
 
+// signup
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -28,7 +29,6 @@ router.post("/signup", async (req, res) => {
   // Encrypt password
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Insert the new user
   const result = db
     .prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)")
     .run(name, email, hashedPassword);
@@ -44,7 +44,7 @@ router.post("/signup", async (req, res) => {
   res.status(201).json({ token, name, email });
 });
 
-// POST /api/login
+// login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
