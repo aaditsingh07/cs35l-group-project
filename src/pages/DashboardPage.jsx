@@ -1,13 +1,9 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
   const name = localStorage.getItem("name") || "there";
-
-  if (!localStorage.getItem("token")) {
-    return <Navigate to="/login" replace />;
-  }
 
   function handleLogout() {
     localStorage.removeItem("token");

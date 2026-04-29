@@ -1,11 +1,7 @@
 import React from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function WelcomePage() {
-  if (localStorage.getItem("token")) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
   return (
     <div>
       <h1> Welcome to CS35L GroupHub </h1>

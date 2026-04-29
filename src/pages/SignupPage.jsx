@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SignupPage() {
   const [name, setName] = React.useState("");
@@ -8,10 +8,6 @@ export default function SignupPage() {
   const [confirm, setConfirm] = React.useState("");
   const [error, setError] = React.useState("");
   const navigate = useNavigate();
-
-  if (localStorage.getItem("token")) {
-    return <Navigate to="/dashboard" replace />;
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();

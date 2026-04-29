@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 
 import WelcomePage from "./pages/WelcomePage";
@@ -6,16 +6,24 @@ import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignupPage";
 import DashboardPage from "./pages/DashboardPage";
 
+function ProtectedRoute({ children }) {
+  return localStorage.getItem("token") ? children : <Navigate to="/login" replace />;
+}
+
+function PublicRoute({ children }) {
+  return localStorage.getItem("token") ? <Navigate to="/dashboard" replace /> : children;
+}
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<WelcomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/" element={<PublicRoute><WelcomePage /></PublicRoute>} />
+        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
+        <Route path="/signup" element={<PublicRoute><SignUpPage /></PublicRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
       </Routes>
-   </BrowserRouter>
+    </BrowserRouter>
   );
 }
 
