@@ -23,7 +23,7 @@ node index.js
 npm start
 ```
 
-The frontend runs at `http://localhost:3000` and the backend at `http://localhost:5000` (or whichever port is configured in `server/index.js`).
+The frontend runs at `http://localhost:3000` and the backend at `http://localhost:5001` (or whichever port is configured in `server/index.js`).
 
 ---
 
