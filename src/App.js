@@ -5,6 +5,9 @@ import WelcomePage from "./pages/WelcomePage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignupPage";
 import DashboardPage from "./pages/DashboardPage";
+import TasksPage from "./pages/TasksPage";
+import GroupPage from "./pages/GroupPage";
+import MeetingsPage from "./pages/MeetingsPage";
 
 function ProtectedRoute({ children }) {
   return localStorage.getItem("token") ? children : <Navigate to="/login" replace />;
@@ -22,6 +25,9 @@ function App() {
         <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
         <Route path="/signup" element={<PublicRoute><SignUpPage /></PublicRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+        <Route path="/tasks" element={<ProtectedRoute><TasksPage /></ProtectedRoute>} />
+        <Route path="/group" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
+        <Route path="/meetings" element={<ProtectedRoute><MeetingsPage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );
