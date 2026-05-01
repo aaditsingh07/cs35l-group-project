@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -42,7 +42,9 @@ export default function DashboardPage() {
         >
           <h3>Tasks</h3>
           <p>Manage and track your group's tasks.</p>
-          <button disabled>View Tasks</button>
+          <Link to="/tasks">
+            <button>View Tasks</button>
+          </Link>
         </div>
 
         <div
@@ -54,7 +56,9 @@ export default function DashboardPage() {
         >
           <h3>Meetings</h3>
           <p>Schedule and join group meetings.</p>
-          <button disabled>View Meetings</button>
+          <Link to="/meetings">
+            <button>View Meetings</button>
+          </Link>
         </div>
 
         <div
@@ -66,7 +70,9 @@ export default function DashboardPage() {
         >
           <h3>Your Group</h3>
           <p>View your group and its members.</p>
-          <button disabled>View Group</button>
+          <Link to="/group">
+            <button>View Group</button>
+          </Link>
         </div>
       </div>
     </div>
