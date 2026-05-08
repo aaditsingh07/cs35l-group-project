@@ -137,9 +137,24 @@ function GroupPage() {
               ))}
             </ul>
           )}
+          {/* ========================================
+              Group tools section
+              Links to other pages that help the group work together.
+              ======================================== */}
+          <h2>Group Tools</h2>
+          
+          <ul>
+            <li>
+              <Link to="/tasks">Go to Task Board</Link>
+            </li>
+            <li>
+              <Link to="/meetings">Go to Meetings</Link>
+            </li>
+          </ul>
         </div>
       )}
     </div>
   );
 }
+
 export default GroupPage;
