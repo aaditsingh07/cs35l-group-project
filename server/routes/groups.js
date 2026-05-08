@@ -48,7 +48,24 @@ router.post("/groups", requireAuth, (req, res) => {
     .run(name, description ?? null);
 
   res.status(201).json({ groupId: result.lastInsertRowid, name });
-});
 
+  // PUT /groups/mine/join — temporary route for testing group assignment
+  router.put("/groups/mine/join", requireAuth, (req, res) => {
+    const { groupId } = req.body;
+    if (!groupId) {
+      return res.status(400).json({ error: "Group ID is required." });
+    }
+    
+    const group = db
+      .prepare("SELECT id FROM groups WHERE id = ?")
+      .get(groupId);
+    if (!group) {
+      return res.status(404).json({ error: "Group not found." });
+    }
+    db.prepare("UPDATE users SET group_id = ? WHERE id = ?")
+      .run(groupId, req.user.userId);
+    
+    res.json({ message: "Joined group successfully." });
+});
 
 module.exports = router;
