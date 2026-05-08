@@ -7,13 +7,13 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id      INTEGER PRIMARY KEY AUTOINCREMENT,
     name    TEXT    NOT NULL,
+    account_type TEXT NOT NULL DEFAULT 'user',  -- 'user' or 'admin'
     email   TEXT    NOT NULL UNIQUE,
     password TEXT   NOT NULL,
     group_id INTEGER REFERENCES groups(id),   -- NULL = not yet grouped
     created_at  TEXT    DEFAULT (datetime('now'))
   )
 `);
-
 
 // Groups table
 db.exec(`

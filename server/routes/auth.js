@@ -64,11 +64,13 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ error: "Invalid email or password." });
   }
 
-  const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
-    expiresIn: "7d",
-  });
+  const token = jwt.sign(
+    { userId: user.id, email: user.email, account_type: user.account_type },
+    JWT_SECRET,
+    { expiresIn: "7d" },
+  );
 
-  res.json({ token, name: user.name, email: user.email });
+  res.json({ token, name: user.name, email: user.email, account_type: user.account_type });
 });
 
 module.exports = router;

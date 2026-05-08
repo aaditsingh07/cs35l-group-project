@@ -8,6 +8,7 @@ import DashboardPage from "./pages/DashboardPage";
 import TasksPage from "./pages/TasksPage";
 import GroupPage from "./pages/GroupPage";
 import MeetingsPage from "./pages/MeetingsPage";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function ProtectedRoute({ children }) {
   return localStorage.getItem("token") ? children : <Navigate to="/login" replace />;
@@ -15,6 +16,13 @@ function ProtectedRoute({ children }) {
 
 function PublicRoute({ children }) {
   return localStorage.getItem("token") ? <Navigate to="/dashboard" replace /> : children;
+}
+
+function AdminRoute({ children }) {
+  const token = localStorage.getItem("token");
+  if (!token) return <Navigate to="/login" replace />;
+  if (localStorage.getItem("account_type") !== "admin") return <Navigate to="/dashboard" replace />;
+  return children;
 }
 
 function App() {
@@ -28,6 +36,7 @@ function App() {
         <Route path="/tasks" element={<ProtectedRoute><TasksPage /></ProtectedRoute>} />
         <Route path="/group" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
         <Route path="/meetings" element={<ProtectedRoute><MeetingsPage /></ProtectedRoute>} />
+        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
       </Routes>
     </BrowserRouter>
   );

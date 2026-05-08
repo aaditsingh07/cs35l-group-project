@@ -13,17 +13,26 @@ cd server && npm install && cd ..
 ## Running the app
 
 **Backend** (in one terminal):
+
 ```bash
 cd server
 node index.js
 ```
 
 **Frontend** (in another terminal, from repo root):
+
 ```bash
 npm start
 ```
 
 The frontend runs at `http://localhost:3000` and the backend at `http://localhost:5001` (or whichever port is configured in `server/index.js`).
+
+## Create an Admin Account
+
+```bash
+cd server
+node seed-admin.js [email] [name] [password]
+```
 
 ---
 

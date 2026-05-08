@@ -27,7 +27,8 @@ export default function LoginPage() {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("name", data.name);
-      navigate("/dashboard");
+      localStorage.setItem("account_type", data.account_type);
+      navigate(data.account_type === "admin" ? "/admin" : "/dashboard");
     } catch (err) {
       setError("Could not connect to the server.");
     }
