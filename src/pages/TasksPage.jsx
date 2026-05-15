@@ -20,7 +20,7 @@ export default function TasksPage() {
 
   async function fetchTasks() {
     try {
-      const res = await fetch(`${BASE}/api/tasks`, {
+      const res = await fetch(`${BASE}/api/tasks/get`, {
         headers: authHeaders(),
       });
       const data = await res.json();
@@ -45,7 +45,7 @@ export default function TasksPage() {
     setError("");
 
     try {
-      const res = await fetch(`${BASE}/api/tasks`, {
+      const res = await fetch(`${BASE}/api/tasks/create`, {
         method: "POST",
         headers: authHeaders(),
         body: JSON.stringify({ title, description }),
@@ -66,9 +66,10 @@ export default function TasksPage() {
 
   async function handleDelete(id) {
     try {
-      const res = await fetch(`${BASE}/api/tasks/${id}`, {
+      const res = await fetch(`${BASE}/api/tasks/delete`, {
         method: "DELETE",
         headers: authHeaders(),
+        body: JSON.stringify({ id }),
       });
       if (!res.ok) {
         const data = await res.json();
@@ -83,10 +84,10 @@ export default function TasksPage() {
 
   async function handleToggle(task) {
     try {
-      const res = await fetch(`${BASE}/api/tasks/${task.id}`, {
-        method: "PATCH",
+      const res = await fetch(`${BASE}/api/tasks/toggle`, {
+        method: "PUT",
         headers: authHeaders(),
-        body: JSON.stringify({ completed: !task.completed }),
+        body: JSON.stringify({ completed: !task.completed, id: task.id }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -153,7 +154,11 @@ export default function TasksPage() {
                 onChange={() => handleToggle(task)}
               />
               <div>
-                <strong style={{ textDecoration: task.completed ? "line-through" : "none" }}>
+                <strong
+                  style={{
+                    textDecoration: task.completed ? "line-through" : "none",
+                  }}
+                >
                   {task.title}
                 </strong>
                 {task.description && <p>{task.description}</p>}
