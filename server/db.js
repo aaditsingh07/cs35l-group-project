@@ -26,4 +26,16 @@ db.exec(`
   )
 `);
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS tasks (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    title       TEXT    NOT NULL,
+    description TEXT,
+    completed   INTEGER NOT NULL DEFAULT 0,
+    user_id     INTEGER REFERENCES users(id),
+    group_id    INTEGER REFERENCES groups(id),
+    created_at  TEXT    DEFAULT (datetime('now'))
+  )
+`);
+
 module.exports = db;

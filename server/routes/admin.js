@@ -6,6 +6,16 @@ const router = express.Router();
 
 router.use(requireAdmin);
 
+router.get("/users/search", requireAdmin, (req, res) => {
+  const q = `%${req.query.q ?? ""}%`;
+  const users = db
+    .prepare(
+      "SELECT id, name, email, account_type, group_id FROM users WHERE name LIKE ? OR email LIKE ? ORDER BY name ASC"
+    )
+    .all(q, q);
+  res.json(users);
+});
+
 // GET /api/admin/users
 router.get("/users", (req, res) => {
   const users = db
@@ -62,6 +72,28 @@ router.get("/tasks", (req, res) => {
   if (!tableExists) return res.json([]);
   const tasks = db.prepare("SELECT * FROM tasks").all();
   res.json(tasks);
+});
+
+router.patch("/users/:id/group", (req, res) => {
+  const { group_id } = req.body;
+  if (group_id !== null && group_id !== undefined) {
+    const group = db.prepare("SELECT id FROM groups WHERE id = ?").get(group_id);
+    if (!group) return res.status(404).json({ error: "Group not found." });
+  }
+  db.prepare("UPDATE users SET group_id = ? WHERE id = ?").run(
+    group_id ?? null,
+    req.params.id
+  );
+  res.json({ message: "User group updated." });
+});
+
+router.post("/groups", (req, res) => {
+  const { name, description } = req.body;
+  if (!name?.trim()) return res.status(400).json({ error: "Group name is required." });
+  const result = db
+    .prepare("INSERT INTO groups (name, description) VALUES (?, ?)")
+    .run(name.trim(), description?.trim() ?? null);
+  res.status(201).json({ id: result.lastInsertRowid, name });
 });
 
 module.exports = router;
