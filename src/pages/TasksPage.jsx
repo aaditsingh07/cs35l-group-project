@@ -10,10 +10,75 @@ function authHeaders() {
   };
 }
 
+function TaskList({ tasks, onToggle, onDelete }) {
+  if (tasks.length === 0) {
+    return <p style={{ color: "#888", fontStyle: "italic" }}>No tasks yet.</p>;
+  }
+  return (
+    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+      {tasks.map((task) => (
+        <li
+          key={task.id}
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "1rem",
+            padding: "0.75rem 0",
+            borderBottom: "1px solid #eee",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={!!task.completed}
+            onChange={() => onToggle(task)}
+            style={{ marginTop: "0.2rem", flexShrink: 0 }}
+          />
+          <div style={{ flex: 1 }}>
+            <strong
+              style={{
+                textDecoration: task.completed ? "line-through" : "none",
+                color: task.completed ? "#999" : "inherit",
+              }}
+            >
+              {task.title}
+            </strong>
+            {task.description && (
+              <p
+                style={{
+                  margin: "0.25rem 0 0",
+                  color: "#555",
+                  fontSize: "0.9em",
+                }}
+              >
+                {task.description}
+              </p>
+            )}
+          </div>
+          <button
+            onClick={() => onDelete(task.id)}
+            style={{
+              flexShrink: 0,
+              color: "#c00",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            Delete
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default function TasksPage() {
-  const [tasks, setTasks] = React.useState([]);
+  const [personalTasks, setPersonalTasks] = React.useState([]);
+  const [groupTasks, setGroupTasks] = React.useState([]);
+  const [hasGroup, setHasGroup] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
+  const [isGroupTask, setIsGroupTask] = React.useState(false);
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(true);
   const [formOpen, setFormOpen] = React.useState(false);
@@ -28,7 +93,9 @@ export default function TasksPage() {
         setError(data.error || "Failed to load tasks.");
         return;
       }
-      setTasks(data);
+      setHasGroup(data.hasGroup);
+      setGroupTasks(data.group ?? []);
+      setPersonalTasks(data.personal ?? []);
     } catch {
       setError("Could not connect to the server.");
     } finally {
@@ -43,19 +110,26 @@ export default function TasksPage() {
   async function handleCreate(e) {
     e.preventDefault();
     setError("");
-
+    if (isGroupTask && !hasGroup) {
+      setError("You must be in a group to create a group task.");
+      return;
+    }
     try {
       const res = await fetch(`${BASE}/api/tasks/create`, {
         method: "POST",
         headers: authHeaders(),
-        body: JSON.stringify({ title, description }),
+        body: JSON.stringify({ title, description, isGroupTask }),
       });
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Failed to create task.");
         return;
       }
-      setTasks((prev) => [data, ...prev]);
+      if (data.group_id) {
+        setGroupTasks((prev) => [data, ...prev]);
+      } else {
+        setPersonalTasks((prev) => [data, ...prev]);
+      }
       setTitle("");
       setDescription("");
       setFormOpen(false);
@@ -76,7 +150,8 @@ export default function TasksPage() {
         setError(data.error || "Failed to delete task.");
         return;
       }
-      setTasks((prev) => prev.filter((t) => t.id !== id));
+      setPersonalTasks((prev) => prev.filter((t) => t.id !== id));
+      setGroupTasks((prev) => prev.filter((t) => t.id !== id));
     } catch {
       setError("Could not connect to the server.");
     }
@@ -94,17 +169,44 @@ export default function TasksPage() {
         setError(data.error || "Failed to update task.");
         return;
       }
-      setTasks((prev) => prev.map((t) => (t.id === data.id ? data : t)));
+      const update = (prev) =>
+        prev.map((t) =>
+          t.id === data.id ? { ...t, completed: data.completed } : t,
+        );
+      setPersonalTasks(update);
+      setGroupTasks(update);
     } catch {
       setError("Could not connect to the server.");
     }
   }
 
+  const columnStyle = {
+    flex: 1,
+    minWidth: 0,
+    padding: "1rem",
+    border: "1px solid #ddd",
+    borderRadius: "8px",
+    background: "#fafafa",
+  };
+
   return (
-    <div>
-      <div>
-        <h1>Task Board</h1>
-        <button onClick={() => setFormOpen((o) => !o)}>
+    <div style={{ padding: "1rem" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "1rem",
+        }}
+      >
+        <h1 style={{ margin: 0 }}>Task Board</h1>
+        <button
+          onClick={() => {
+            setFormOpen((o) => !o);
+            setIsGroupTask(false);
+            setError("");
+          }}
+        >
           {formOpen ? "Cancel" : "New Task"}
         </button>
       </div>
@@ -112,7 +214,17 @@ export default function TasksPage() {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {formOpen && (
-        <form onSubmit={handleCreate} noValidate>
+        <form
+          onSubmit={handleCreate}
+          noValidate
+          style={{
+            marginBottom: "1.5rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+            maxWidth: "400px",
+          }}
+        >
           <div>
             <label htmlFor="title">Title</label>
             <input
@@ -122,9 +234,9 @@ export default function TasksPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
+              style={{ display: "block", width: "100%", marginTop: "0.25rem" }}
             />
           </div>
-
           <div>
             <label htmlFor="description">Description</label>
             <textarea
@@ -133,40 +245,76 @@ export default function TasksPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
+              style={{ display: "block", width: "100%", marginTop: "0.25rem" }}
             />
           </div>
-
-          <button type="submit">Add Task</button>
+          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+            <span style={{ fontWeight: 500 }}>Type:</span>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.25rem",
+                cursor: "pointer",
+              }}
+            >
+              <input
+                type="radio"
+                name="taskType"
+                checked={!isGroupTask}
+                onChange={() => setIsGroupTask(false)}
+              />
+              Personal
+            </label>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.25rem",
+                cursor: "pointer",
+              }}
+            >
+              <input
+                type="radio"
+                name="taskType"
+                checked={isGroupTask}
+                onChange={() => setIsGroupTask(true)}
+              />
+              Group
+            </label>
+          </div>
+          <button type="submit" style={{ alignSelf: "flex-start" }}>
+            Add Task
+          </button>
         </form>
       )}
 
       {loading ? (
         <p>Loading tasks...</p>
-      ) : tasks.length === 0 ? (
-        <p>No tasks yet. Create one to get started.</p>
       ) : (
-        <ul>
-          {tasks.map((task) => (
-            <li key={task.id}>
-              <input
-                type="checkbox"
-                checked={!!task.completed}
-                onChange={() => handleToggle(task)}
+        <div
+          style={{ display: "flex", gap: "1.5rem", alignItems: "flex-start" }}
+        >
+          <div style={columnStyle}>
+            <h2 style={{ marginTop: 0 }}>Personal Tasks</h2>
+            <TaskList
+              tasks={personalTasks}
+              onToggle={handleToggle}
+              onDelete={handleDelete}
+            />
+          </div>
+
+          {hasGroup && (
+            <div style={columnStyle}>
+              <h2 style={{ marginTop: 0 }}>Group Tasks</h2>
+              <TaskList
+                tasks={groupTasks}
+                onToggle={handleToggle}
+                onDelete={handleDelete}
               />
-              <div>
-                <strong
-                  style={{
-                    textDecoration: task.completed ? "line-through" : "none",
-                  }}
-                >
-                  {task.title}
-                </strong>
-                {task.description && <p>{task.description}</p>}
-              </div>
-              <button onClick={() => handleDelete(task.id)}>Delete</button>
-            </li>
-          ))}
-        </ul>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

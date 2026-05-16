@@ -79,12 +79,20 @@ function getUserGroupId(userId) {
 }
 
 router.post("/tasks/create", requireAuth, (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, isGroupTask } = req.body;
   if (!title) {
     return res.status(400).json({ error: "Task title is required." });
   }
 
-  const group_id = getUserGroupId(req.user.userId);
+  let group_id = null;
+  if (isGroupTask) {
+    group_id = getUserGroupId(req.user.userId);
+    if (!group_id) {
+      return res
+        .status(400)
+        .json({ error: "You must be in a group to create a group task." });
+    }
+  }
 
   const result = db
     .prepare(
@@ -107,7 +115,7 @@ router.get("/tasks/get", requireAuth, (req, res) => {
 
   const personalTasks = db
     .prepare(
-      "SELECT * FROM tasks WHERE created_by = ? ORDER BY created_at DESC",
+      "SELECT * FROM tasks WHERE created_by = ? AND group_id IS NULL ORDER BY created_at DESC",
     )
     .all(req.user.userId);
 
