@@ -21,9 +21,9 @@ function TaskList({ tasks, onToggle, onDelete }) {
           key={task.id}
           style={{
             display: "flex",
-            alignItems: "flex-start",
-            gap: "1rem",
-            padding: "0.75rem 0",
+            alignItems: "center",
+            gap: "0.8rem",
+            padding: "0.8   rem 0",
             borderBottom: "1px solid #eee",
           }}
         >
@@ -31,7 +31,7 @@ function TaskList({ tasks, onToggle, onDelete }) {
             type="checkbox"
             checked={!!task.completed}
             onChange={() => onToggle(task)}
-            style={{ marginTop: "0.2rem", flexShrink: 0 }}
+            style={{ flexShrink: 0 }}
           />
           <div style={{ flex: 1 }}>
             <strong
