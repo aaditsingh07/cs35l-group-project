@@ -106,3 +106,48 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+---
+
+# Current UI Preview
+
+## Welcome Page
+
+The landing page introduces the purpose of GroupHub and provides navigation to the Log In and Sign Up pages.
+
+![Welcome Page](./screenshots/welcome.png)
+
+---
+
+## Login Page
+
+Users can log into their accounts using their email and password.
+
+![Login Page](./screenshots/login.png)
+
+---
+
+## Sign Up Page
+
+New users can create an account by entering their name, email, and password.
+
+![Sign Up Page](./screenshots/signup.png)
+
+---
+
+## Dashboard Page
+
+The dashboard acts as the main navigation hub after login. Users can access:
+- Tasks
+- Meetings
+- Group Information
+
+![Dashboard Page](./screenshots/dashboard.png)
+
+---
+
+## Group Page
+
+Users can view their assigned project group and current group members.
+
+![Group Page](./screenshots/group.png)
