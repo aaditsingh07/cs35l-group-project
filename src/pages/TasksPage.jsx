@@ -82,6 +82,7 @@ export default function TasksPage() {
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(true);
   const [formOpen, setFormOpen] = React.useState(false);
+  const [searchTerm, setSearchTerm] = React.useState("");
 
   async function fetchTasks() {
     try {
@@ -180,6 +181,21 @@ export default function TasksPage() {
     }
   }
 
+  function matchesSearch(task) {
+    const keyword = searchTerm.trim().toLowerCase();
+
+    if(!keyword){
+      return true;
+    }
+    
+    return(task.title.toLowerCase().includes(keyword)||
+           (task.description || "").toLowerCase(),includes(keyword)
+    );
+  }
+  const filteredPersonalTasks = personalTasks.filter(matchSearch);
+  const filterGroupTasks = groupTasks.filter(matchesSearch);
+  const hasSearchResult = filteredPersonalTasks > 0 || filterGroupTasks
+  
   const columnStyle = {
     flex: 1,
     minWidth: 0,
