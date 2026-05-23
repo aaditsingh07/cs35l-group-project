@@ -229,6 +229,27 @@ export default function TasksPage() {
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
+      <div style={{ marginBottom: "1rem", maxWidth: "420px"}}>
+        <label htmlFor="task-search" style={{ fontWeight: 500 }}>
+          Search Tasks
+        </label>
+        <input
+          id="task-search"
+          type="text"
+          placeholder="Search by title or description..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            display: "block",
+            width: "100%",
+            marginTop: "0.25rem",
+            padding: "0.5rem",
+            border: "1px solid #ccc",
+            borderRadius: "6px",
+          }}
+          />
+      </div>
+
       {formOpen && (
         <form
           onSubmit={handleCreate}
@@ -308,13 +329,19 @@ export default function TasksPage() {
       {loading ? (
         <p>Loading tasks...</p>
       ) : (
+      <>
+        {searchTerm.trim() && !hasSearchResults && (
+        <p style={{ color: "#888", fontStyle: "italic" }}>
+          No tasks match your search.
+        </p>
+      )}
         <div
           style={{ display: "flex", gap: "1.5rem", alignItems: "flex-start" }}
         >
           <div style={columnStyle}>
             <h2 style={{ marginTop: 0 }}>Personal Tasks</h2>
             <TaskList
-              tasks={personalTasks}
+              tasks={filteredPersonalTasks}
               onToggle={handleToggle}
               onDelete={handleDelete}
             />
@@ -324,14 +351,15 @@ export default function TasksPage() {
             <div style={columnStyle}>
               <h2 style={{ marginTop: 0 }}>Group Tasks</h2>
               <TaskList
-                tasks={groupTasks}
+                tasks={filteredGroupTasks}
                 onToggle={handleToggle}
                 onDelete={handleDelete}
               />
             </div>
           )}
         </div>
-      )}
+      </>
+    )}
     </div>
   );
 }
