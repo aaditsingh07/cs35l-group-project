@@ -1,39 +1,146 @@
-# Setup
+# CS35L GroupHub
 
-After cloning, install dependencies for both the frontend and the backend:
+## Project Overview
+
+CS35L GroupHub is a project management and communication web app designed for CS35L student project teams. The app helps students manage project work by providing tools for authentication, group viewing, task management, meeting coordination, and admin controls.
+
+The goal of the app is to make team collaboration easier by keeping group information, tasks, and meeting-related tools in one place.
+
+---
+
+## Main Features
+
+### Authentication and Security
+- Users can sign up and log in.
+- Passwords are hashed before being stored.
+- The app uses JWT authentication.
+- Protected pages require users to be logged in.
+- Admin-only pages require admin privileges.
+
+### User Dashboard
+- Users are redirected to a dashboard after logging in.
+- The dashboard acts as the main navigation hub.
+- Users can access tasks, meetings, and group information from the dashboard.
+
+### Group Management
+- Users can view their assigned project group.
+- Users can view current group members.
+- Admin users can manage users and groups.
+
+### Task Management
+- Users can create tasks.
+- Users can view personal and group tasks.
+- Users can mark tasks as completed.
+- Users can delete tasks.
+- Users can search tasks by title or description.
+
+### Meetings
+- Users can access a meetings page for group scheduling and coordination.
+
+### Admin Tools
+- Admin users can access admin-only features.
+- Admins can create users.
+- Admins can create and manage project groups.
+- Admins can search users by name or email.
+
+---
+
+## Tech Stack
+
+### Frontend
+- React
+- React Router
+- JavaScript
+- CSS
+
+### Backend
+- Node.js
+- Express
+- SQLite
+- better-sqlite3
+- bcryptjs
+- JSON Web Tokens
+
+---
+
+## Setup
+After cloning the repository, install dependencies for both the frontend and the backend.
+
+### Install frontend dependencies
+From the repository root:
 
 ```bash
-# Install frontend dependencies (from repo root)
 npm install
-
-# Install backend dependencies
-cd server && npm install && cd ..
 ```
 
-## Running the app
+### Install backend dependencies
+```bash
+cd server
+npm install
+cd ..
+```
 
-**Backend** (in one terminal):
+---
 
+## Running the App Locally
+
+### Start the backend
+In one terminal:
 ```bash
 cd server
 node index.js
 ```
 
-**Frontend** (in another terminal, from repo root):
+The backend runs at:
+```text
+http://localhost:5001
+```
+or whichever port is configured in `server/index.js`.
 
+### Start the frontend
+In another terminal, from the repository root:
 ```bash
 npm start
 ```
 
-The frontend runs at `http://localhost:3000` and the backend at `http://localhost:5001` (or whichever port is configured in `server/index.js`).
+The frontend runs at:
+```text
+http://localhost:3000
+```
+
+---
 
 ## Create an Admin Account
-
+To create an admin account, run:
 ```bash
 cd server
 node seed-admin.js [email] [name] [password]
 ```
 
+Example:
+```bash
+cd server
+node seed-admin.js admin@example.com Admin password123
+```
+After creating the admin account, log in through the app using the admin email and password.
+
+---
+
+## User Flow
+1. A user opens the welcome page.
+2. The user chooses to log in or sign up.
+3. After authentication, the user is redirected to the dashboard.
+4. From the dashboard, the user can access:
+   - Tasks
+   - Meetings
+   - Group information
+5. The tasks page allows users to create, complete, delete, and search tasks.
+6. The group page displays the user's assigned group and group members.
+7. Admin users can access admin tools to manage users and groups.
+---
+## Architecture Diagrams
+
+### Diagram : System Architecture
 ---
 
 # Getting Started with Create React App
