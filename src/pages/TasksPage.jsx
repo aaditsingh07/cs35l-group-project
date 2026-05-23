@@ -23,7 +23,7 @@ function TaskList({ tasks, onToggle, onDelete }) {
             display: "flex",
             alignItems: "center",
             gap: "0.8rem",
-            padding: "0.8   rem 0",
+            padding: "0.8rem 0",
             borderBottom: "1px solid #eee",
           }}
         >
@@ -184,17 +184,19 @@ export default function TasksPage() {
   function matchesSearch(task) {
     const keyword = searchTerm.trim().toLowerCase();
 
-    if(!keyword){
+    if (!keyword) {
       return true;
     }
-    
-    return(task.title.toLowerCase().includes(keyword)||
-           (task.description || "").toLowerCase(),includes(keyword)
+
+    return (
+      task.title.toLowerCase().includes(keyword) ||
+      (task.description || "").toLowerCase().includes(keyword)
     );
   }
-  const filteredPersonalTasks = personalTasks.filter(matchSearch);
-  const filterGroupTasks = groupTasks.filter(matchesSearch);
-  const hasSearchResult = filteredPersonalTasks > 0 || filterGroupTasks
+  const filteredPersonalTasks = personalTasks.filter(matchesSearch);
+  const filteredGroupTasks = groupTasks.filter(matchesSearch);
+  const hasSearchResults =
+    filteredPersonalTasks.length > 0 || filteredGroupTasks.length > 0;
   
   const columnStyle = {
     flex: 1,

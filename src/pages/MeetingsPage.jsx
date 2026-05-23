@@ -1,39 +1,37 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function MeetingPage() {
+export default function MeetingPage() {
   const [meetingTitle, setMeetingTitle] = React.useState("");
   const [meetingTime, setMeetingTime] = React.useState("");
   const [meetings, setMeetings] = React.useState([]);
   const [time, setTime] = React.useState("");
   const [notes, setNotes] = React.useState("");
-  
-  function handleSubmit(e) {
-    event.preventDefault();
 
-    if (!title.trim() || !date || !time){
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!meetingTitle.trim() || !meetingTime) {
       return;
     }
-    
+
     const newMeeting = {
       id: Date.now(),
-      title: title.trim(),
-      date,
-      time,
+      title: meetingTitle.trim(),
+      time: meetingTime,
       notes: notes.trim(),
     };
 
     setMeetings([newMeeting, ...meetings]);
-    setTitle("");
-    setDate("");
-    setTime("");
+    setMeetingTitle("");
+    setMeetingTime("");
     setNotes("");
   }
-  
-  function handleDelete(id){
+
+  function handleDelete(id) {
     setMeetings(meetings.filter((meeting) => meeting.id !== id));
   }
-  
+
   return (
     <div>
       <Link to="/dashboard">Back to Dashboard</Link>
