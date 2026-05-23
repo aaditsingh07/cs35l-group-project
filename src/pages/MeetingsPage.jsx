@@ -5,20 +5,35 @@ function MeetingPage() {
   const [meetingTitle, setMeetingTitle] = React.useState("");
   const [meetingTime, setMeetingTime] = React.useState("");
   const [meetings, setMeetings] = React.useState([]);
-
+  const [time, setTime] = React.useState("");
+  const [notes, setNotes] = React.useState("");
+  
   function handleSubmit(e) {
-    e.preventDefault();
+    event.preventDefault();
 
+    if (!title.trim() || !date || !time){
+      return;
+    }
+    
     const newMeeting = {
       id: Date.now(),
-      title: meetingTitle,
-      time: meetingTime,
+      title: title.trim(),
+      date,
+      time,
+      notes: notes.trim(),
     };
 
     setMeetings([newMeeting, ...meetings]);
-    setMeetingTitle("");
-    setMeetingTime("");
+    setTitle("");
+    setDate("");
+    setTime("");
+    setNotes("");
   }
+  
+  function handleDelete(id){
+    setMeetings(meetings.filter((meeting) => meeting.id !== id));
+  }
+  
   return (
     <div>
       <Link to="/dashboard">Back to Dashboard</Link>
