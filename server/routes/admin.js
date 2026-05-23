@@ -10,7 +10,11 @@ router.get("/users/search", requireAdmin, (req, res) => {
   const q = `%${req.query.q ?? ""}%`;
   const users = db
     .prepare(
-      "SELECT id, name, email, account_type, group_id FROM users WHERE name LIKE ? OR email LIKE ? ORDER BY name ASC"
+      `SELECT u.id, u.name, u.email, u.account_type, u.group_id, g.name AS group_name
+       FROM users u
+       LEFT JOIN groups g ON g.id = u.group_id
+       WHERE u.name LIKE ? OR u.email LIKE ?
+       ORDER BY u.name ASC`
     )
     .all(q, q);
   res.json(users);
@@ -19,9 +23,37 @@ router.get("/users/search", requireAdmin, (req, res) => {
 // GET /api/admin/users
 router.get("/users", (req, res) => {
   const users = db
-    .prepare("SELECT id, name, email, account_type, group_id FROM users")
+    .prepare(
+      `SELECT u.id, u.name, u.email, u.account_type, u.group_id, g.name AS group_name
+       FROM users u
+       LEFT JOIN groups g ON g.id = u.group_id
+       ORDER BY u.name ASC`
+    )
     .all();
   res.json(users);
+});
+
+// PATCH /api/admin/users/group-bulk
+router.patch("/users/group-bulk", (req, res) => {
+  const { user_ids, group_id } = req.body;
+  if (!Array.isArray(user_ids) || user_ids.length === 0) {
+    return res.status(400).json({ error: "user_ids must be a non-empty array." });
+  }
+  if (group_id !== null && group_id !== undefined) {
+    const group = db.prepare("SELECT id FROM groups WHERE id = ?").get(group_id);
+    if (!group) return res.status(404).json({ error: "Group not found." });
+  }
+  const update = db.prepare("UPDATE users SET group_id = ? WHERE id = ?");
+  const tx = db.transaction((ids, gid) => {
+    let count = 0;
+    for (const id of ids) {
+      const result = update.run(gid, id);
+      count += result.changes;
+    }
+    return count;
+  });
+  const updated = tx(user_ids, group_id ?? null);
+  res.json({ updated });
 });
 
 // PATCH /api/admin/users/:id/role

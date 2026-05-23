@@ -25,11 +25,11 @@ router.get("/groups/mine", requireAuth, (req, res) => {
     return res.json({ group: null, members: [] });
   }
 
-  const group = db.prepare("SELECT * FROM groups WHERE id = ?").get(user.group_id);
+  const group = db
+    .prepare("SELECT * FROM groups WHERE id = ?")
+    .get(user.group_id);
   const members = db
-    .prepare(
-      "SELECT id, name, email, profile_photo FROM users WHERE group_id = ?",
-    )
+    .prepare("SELECT id, name, email FROM users WHERE group_id = ?")
     .all(user.group_id);
 
   res.json({ group, members });
