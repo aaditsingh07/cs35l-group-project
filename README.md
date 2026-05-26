@@ -140,7 +140,28 @@ After creating the admin account, log in through the app using the admin email a
 ---
 ## Architecture Diagrams
 
-### Diagram : System Architecture
+### System Architecture Diagram
+
+This diagram illustrates the overall architecture of the application. 
+The frontend is built using React and handles user interaction through pages such as login, tasks, meetings, and group management. 
+The frontend communicates with the Express.js backend through API/HTTP requests. 
+The backend processes authentication, task management, group management, and admin functionality before interacting with the SQLite database.
+
+![System Architecture](./screenshots/system-architecture.png)
+
+The backend uses JWT authentication and bcrypt password hashing to provide secure login and protected admin functionality.
+
+---
+
+### User Flow Diagram
+
+This diagram demonstrates how users navigate through the application. 
+Users begin at the welcome page and can either log in or sign up. 
+After successful authentication, users are redirected to the dashboard where they can access groups, tasks, and meetings functionality. 
+Admin users additionally gain access to the admin dashboard for user and group management.
+
+![User Flow Diagram](./screenshots/user-flow-diagram.png)
+
 ---
 
 # Getting Started with Create React App
