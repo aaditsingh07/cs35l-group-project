@@ -90,6 +90,21 @@ export default function AdminDashboard() {
     if (res.ok) fetchAll();
   }
 
+  async function updatePassword(user) {
+    const newPassword = window.prompt(`Enter new password for ${user.name}:`);
+    if (!newPassword) return;
+    const res = await fetch(`${API}/admin/users/${user.id}/password`, {
+      method: "PATCH",
+      headers: { ...authHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify({ new_password: newPassword }),
+    });
+    if (res.ok) {
+      alert("Password updated successfully.");
+    } else {
+      alert("Failed to update password.");
+    }
+  }
+
   async function deleteGroup(id) {
     if (!window.confirm("Delete this group? Members will be ungrouped."))
       return;
@@ -327,6 +342,9 @@ export default function AdminDashboard() {
                   <td>
                     <button onClick={() => toggleRole(u)}>
                       {u.account_type === "admin" ? "Make User" : "Make Admin"}
+                    </button>
+                    <button onClick={() => updatePassword(u)}>
+                      Reset Password
                     </button>
                   </td>
                 </tr>
