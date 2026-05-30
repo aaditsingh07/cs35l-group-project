@@ -5,6 +5,7 @@ const groupRoutes = require("./routes/groups");
 const adminRoutes = require("./routes/admin");
 const tasksRoutes = require("./routes/tasks");
 const messagesRoutes = require("./routes/messages");
+const meetingsRoutes = require("./routes/meetings");
 
 const app = express();
 const PORT = 5001;
@@ -17,6 +18,7 @@ app.use("/api", groupRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api", tasksRoutes);
 app.use("/api", messagesRoutes);
+app.use("/api", meetingsRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
