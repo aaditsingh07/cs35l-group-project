@@ -114,4 +114,15 @@ db.exec(`
   update user_conversations set to_user = null where to_user not in (select id from users);
 `);
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS meetings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    meeting_time TEXT NOT NULL,
+    group_id INTEGER REFERENCES groups(id),
+    created_by INTEGER REFERENCES users(id),
+    created_at TEXT DEFAULT (datetime('now'))
+  )
+`);
+
 module.exports = db;
