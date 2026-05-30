@@ -149,6 +149,52 @@ router.post("/groups", (req, res) => {
   res.status(201).json({ id: result.lastInsertRowid, name });
 });
 
+router.post("/groups/auto-assign", (req, res) => {
+  const { groupSize } = req.body;
+  const size = parseInt(groupSize);
+  if (!size || size < 2) return res.status(400).json({ error: "Group size must be at least 2." });
+
+  const unassigned = db
+    .prepare("SELECT id FROM users WHERE group_id IS NULL AND account_type = 'user'")
+    .all();
+
+  if (unassigned.length === 0) {
+    return res.status(400).json({ error: "No unassigned users to group." });
+  }
+
+  // Shuffle for randomness
+  for (let i = unassigned.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [unassigned[i], unassigned[j]] = [unassigned[j], unassigned[i]];
+  }
+
+  // Chunk into groups
+  const chunks = [];
+  for (let i = 0; i < unassigned.length; i += size) {
+    chunks.push(unassigned.slice(i, i + size));
+  }
+
+  // If last chunk has only 1 person, fold them into the previous group
+  if (chunks.length > 1 && chunks[chunks.length - 1].length === 1) {
+    chunks[chunks.length - 2].push(...chunks.pop());
+  }
+
+  const insertGroup = db.prepare("INSERT INTO groups (name) VALUES (?)");
+  const assignUser = db.prepare("UPDATE users SET group_id = ? WHERE id = ?");
+
+  const tx = db.transaction(() => {
+    for (let i = 0; i < chunks.length; i++) {
+      const { lastInsertRowid: groupId } = insertGroup.run(`Auto Group ${i + 1}`);
+      for (const user of chunks[i]) {
+        assignUser.run(groupId, user.id);
+      }
+    }
+  });
+
+  tx();
+  res.json({ groupsCreated: chunks.length, usersAssigned: unassigned.length });
+});
+
 router.patch("/admin/users/:id/password", async (req, res) => {
   const { new_password } = req.body;
   const hashedPassword = await bcrypt.hash(new_password, 10);
