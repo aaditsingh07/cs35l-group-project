@@ -66,10 +66,33 @@ db.exec(`
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     group_conversation_id INTEGER REFERENCES group_conversations(id) ON DELETE CASCADE,
     user_conversation_id INTEGER REFERENCES user_conversations(id) ON DELETE CASCADE,
+    sender_id   INTEGER REFERENCES users(id),
     content     TEXT    NOT NULL,
     created_at  TEXT    DEFAULT (datetime('now'))
   )
 `);
+
+const messageCols = db.prepare(`PRAGMA table_info(messages)`).all();
+const messageColNames = messageCols.map((c) => c.name);
+if (!messageColNames.includes("sender_id")) {
+  db.exec(`ALTER TABLE messages ADD COLUMN sender_id INTEGER REFERENCES users(id)`);
+}
+if (!messageColNames.includes("group_conversation_id")) {
+  db.exec(
+    `ALTER TABLE messages ADD COLUMN group_conversation_id INTEGER REFERENCES group_conversations(id)`,
+  );
+  if (messageColNames.includes("group_id")) {
+    db.exec(`UPDATE messages SET group_conversation_id = group_id WHERE group_conversation_id IS NULL`);
+  }
+}
+if (!messageColNames.includes("user_conversation_id")) {
+  db.exec(
+    `ALTER TABLE messages ADD COLUMN user_conversation_id INTEGER REFERENCES user_conversations(id)`,
+  );
+  if (messageColNames.includes("user_id")) {
+    db.exec(`UPDATE messages SET user_conversation_id = user_id WHERE user_conversation_id IS NULL`);
+  }
+}
 
 db.exec(`
   update users set group_id = null where group_id not in (select id from groups);
