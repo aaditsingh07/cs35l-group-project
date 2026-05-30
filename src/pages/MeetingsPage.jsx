@@ -62,8 +62,23 @@ export default function MeetingPage() {
     }
   }
 
-  function handleDelete(id) {
-    setMeetings(meetings.filter((meeting) => meeting.id !== id));
+  async function handleDelete(id) {
+    const token = localStorage.getItem("token");
+  
+    try {
+      await fetch(`${BASE}/meetings/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      setMeetings(
+        meetings.filter((meeting) => meeting.id !== id)
+      );
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return (
@@ -102,13 +117,24 @@ export default function MeetingPage() {
       {meetings.length === 0 ? (
         <p>No meetings proposed yet.</p>
       ) : (
-        <ul>
+<ul>
   {meetings.map((meeting) => (
-    <li key={meeting.id} style={{ marginBottom: "15px" }}>
+    <li
+      key={meeting.id}
+      style={{ marginBottom: "15px" }}
+    >
       <strong>{meeting.title}</strong>
+
       <div>
         {new Date(meeting.meeting_time).toLocaleString()}
       </div>
+
+      <button
+        onClick={() => handleDelete(meeting.id)}
+        style={{ marginTop: "5px" }}
+      >
+        Delete
+      </button>
     </li>
   ))}
 </ul>
