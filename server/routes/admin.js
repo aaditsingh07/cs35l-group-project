@@ -104,6 +104,7 @@ router.delete("/groups/:id", (req, res) => {
   if (result.changes === 0) {
     return res.status(404).json({ error: "Group not found." });
   }
+  db.prepare("DELETE FROM group_conversations WHERE group_id = ?").run(groupId);
   res.json({ success: true });
 });
 
@@ -141,6 +142,10 @@ router.post("/groups", (req, res) => {
   const result = db
     .prepare("INSERT INTO groups (name, description) VALUES (?, ?)")
     .run(name.trim(), description?.trim() ?? null);
+
+  db.prepare(
+    "INSERT INTO group_conversations (group_id, title) VALUES (?, ?)",
+  ).run(result.lastInsertRowid, name.trim());
   res.status(201).json({ id: result.lastInsertRowid, name });
 });
 

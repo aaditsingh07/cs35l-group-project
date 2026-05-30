@@ -74,6 +74,20 @@ export default function DashboardPage() {
             <button>View Group</button>
           </Link>
         </div>
+
+        <div
+          style={{
+            border: "1px solid #ccc",
+            borderRadius: 8,
+            padding: "1.5rem",
+          }}
+        >
+          <h3>Your Messages</h3>
+          <p>View your group & personal messages.</p>
+          <Link to="/messages">
+            <button>View Messages</button>
+          </Link>
+        </div>
       </div>
     </div>
   );

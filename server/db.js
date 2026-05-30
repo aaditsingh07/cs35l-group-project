@@ -26,6 +26,7 @@ db.exec(`
   )
 `);
 
+// Tasks table
 db.exec(`
   CREATE TABLE IF NOT EXISTS tasks (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,11 +41,54 @@ db.exec(`
 `);
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS group_conversations (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id    INTEGER REFERENCES groups(id) ON DELETE CASCADE,
+    title       TEXT    NOT NULL,
+    created_by  INTEGER REFERENCES users(id),        -- NULL = auto-assigned by system
+    created_at  TEXT    DEFAULT (datetime('now'))
+  )
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS user_conversations (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    from_user     INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    to_user     INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    title       TEXT    NOT NULL,
+    created_by  INTEGER REFERENCES users(id),        -- NULL = auto-assigned by system
+    created_at  TEXT    DEFAULT (datetime('now'))
+  )
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS messages (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_conversation_id INTEGER REFERENCES group_conversations(id) ON DELETE CASCADE,
+    user_conversation_id INTEGER REFERENCES user_conversations(id) ON DELETE CASCADE,
+    content     TEXT    NOT NULL,
+    created_at  TEXT    DEFAULT (datetime('now'))
+  )
+`);
+
+db.exec(`
   update users set group_id = null where group_id not in (select id from groups);
 `);
 
 db.exec(`
   update tasks set group_id = null where group_id not in (select id from groups);
+`);
+
+db.exec(`
+  update group_conversations set group_id = null where group_id not in (select id from groups);
+`);
+
+db.exec(`
+  update user_conversations set from_user = null where from_user not in (select id from users);
+`);
+
+db.exec(`
+  update user_conversations set to_user = null where to_user not in (select id from users);
 `);
 
 module.exports = db;
