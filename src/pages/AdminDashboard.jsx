@@ -27,6 +27,10 @@ export default function AdminDashboard() {
   const [newGroupName, setNewGroupName] = React.useState("");
   const [newGroupDesc, setNewGroupDesc] = React.useState("");
 
+  // Auto-assign state
+  const [autoSize, setAutoSize] = React.useState("4");
+  const [autoMsg, setAutoMsg] = React.useState("");
+
   React.useEffect(() => {
     fetchAll();
   }, []);
@@ -211,6 +215,22 @@ export default function AdminDashboard() {
     }
   }
 
+  async function handleAutoAssign() {
+    setAutoMsg("");
+    const res = await fetch(`${API}/groups/auto-assign`, {
+      method: "POST",
+      headers: { ...authHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify({ groupSize: Number(autoSize) }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      setAutoMsg(data.error);
+    } else {
+      setAutoMsg(`Done — created ${data.groupsCreated} groups for ${data.usersAssigned} users.`);
+      fetchAll();
+    }
+  }
+
   function logout() {
     localStorage.clear();
     navigate("/login");
@@ -387,6 +407,25 @@ export default function AdminDashboard() {
             />
             <button type="submit">Create</button>
           </form>
+
+          <div style={{
+            display: "flex", gap: "0.75rem", alignItems: "center",
+            padding: "0.75rem", marginBottom: "1rem",
+            background: "#f0f7ff", border: "1px solid #99c", borderRadius: 4
+          }}>
+            <strong>Auto-assign unassigned users:</strong>
+            <label>
+              Group size:
+              <input
+                type="number" min="2" max="10"
+                value={autoSize}
+                onChange={e => setAutoSize(e.target.value)}
+                style={{ width: 60, marginLeft: "0.4rem", padding: "0.3rem" }}
+              />
+            </label>
+            <button onClick={handleAutoAssign}>Auto-Assign</button>
+            {autoMsg && <span style={{ color: autoMsg.startsWith("Done") ? "green" : "red" }}>{autoMsg}</span>}
+          </div>
 
           <table
             border="1"
