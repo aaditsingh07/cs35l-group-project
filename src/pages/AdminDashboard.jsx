@@ -16,6 +16,7 @@ export default function AdminDashboard() {
   const [groups, setGroups] = React.useState([]);
   const [tasks, setTasks] = React.useState([]);
   const [error, setError] = React.useState("");
+  const [unreadCount, setUnreadCount] = React.useState(0);
 
   // Users tab state
   const [search, setSearch] = React.useState("");
@@ -33,6 +34,26 @@ export default function AdminDashboard() {
 
   React.useEffect(() => {
     fetchAll();
+  }, []);
+
+  React.useEffect(() => {
+    async function fetchUnreadCount() {
+      try {
+        const res = await fetch(
+          "http://localhost:5001/api/unread-count",
+          {
+            headers: authHeaders(),
+          }
+        );
+  
+        const data = await res.json();
+        setUnreadCount(data.count || 0);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  
+    fetchUnreadCount();
   }, []);
 
   React.useEffect(() => {
@@ -265,12 +286,37 @@ export default function AdminDashboard() {
     </button>
   ))}
 
-  <button
-    onClick={() => navigate("/messages")}
-    style={{ fontWeight: "bold" }}
-  >
-    Messages
-  </button>
+<button
+  onClick={() => navigate("/messages")}
+  style={{
+    fontWeight: "bold",
+    position: "relative",
+  }}
+>
+  Messages
+
+  {unreadCount > 0 && (
+    <span
+      style={{
+        position: "absolute",
+        top: "-8px",
+        right: "-8px",
+        background: "#DC3545",
+        color: "white",
+        borderRadius: "999px",
+        minWidth: "22px",
+        height: "22px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "0.75rem",
+        fontWeight: "bold",
+      }}
+    >
+      {unreadCount}
+    </span>
+  )}
+</button>
 </div>
 
       {tab === "users" && (
