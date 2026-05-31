@@ -25,6 +25,27 @@ export default function DashboardPage() {
       </div>
 
       <h2>Welcome back, {name}!</h2>
+
+      <div
+        style={{
+          background: "linear-gradient(135deg, #0B5ED7, #3A86FF)",
+          color: "white",
+          padding: "2rem",
+          borderRadius: "16px",
+          marginTop: "1rem",
+          marginBottom: "2rem",
+          boxShadow: "0 6px 15px rgba(0,0,0,0.15)",
+        }}
+      >
+        <h2 style={{ margin: 0 }}>
+          🦸 GroupHub Hero Headquarters
+        </h2>
+
+        <p style={{ marginTop: "0.75rem" }}>
+          Manage tasks, meetings, groups, and messages all from one place.
+        </p>
+      </div>
+
       <div
         style={{
           display: "grid",
@@ -35,12 +56,14 @@ export default function DashboardPage() {
       >
         <div
           style={{
-            border: "1px solid #ccc",
-            borderRadius: 8,
+            border: "none",
+            borderRadius: 16,
             padding: "1.5rem",
+            backgroundColor: "white",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           }}
         >
-          <h3>Tasks</h3>
+          <h3>⚡ Tasks</h3>
           <p>Manage and track your group's tasks.</p>
           <Link to="/tasks">
             <button>View Tasks</button>
@@ -49,12 +72,14 @@ export default function DashboardPage() {
 
         <div
           style={{
-            border: "1px solid #ccc",
-            borderRadius: 8,
+            border: "none",
+            borderRadius: 16,
             padding: "1.5rem",
+            backgroundColor: "white",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           }}
         >
-          <h3>Meetings</h3>
+          <h3>📅 Meetings</h3>
           <p>Schedule and join group meetings.</p>
           <Link to="/meetings">
             <button>View Meetings</button>
@@ -63,12 +88,14 @@ export default function DashboardPage() {
 
         <div
           style={{
-            border: "1px solid #ccc",
-            borderRadius: 8,
+            border: "none",
+            borderRadius: 16,
             padding: "1.5rem",
+            backgroundColor: "white",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           }}
         >
-          <h3>Your Group</h3>
+          <h3>🛡️ Your Group</h3>
           <p>View your group and its members.</p>
           <Link to="/group">
             <button>View Group</button>
@@ -77,12 +104,14 @@ export default function DashboardPage() {
 
         <div
           style={{
-            border: "1px solid #ccc",
-            borderRadius: 8,
+            border: "none",
+            borderRadius: 16,
             padding: "1.5rem",
+            backgroundColor: "white",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           }}
         >
-          <h3>Your Messages</h3>
+          <h3>💬 Your Messages</h3>
           <p>View your group & personal messages.</p>
           <Link to="/messages">
             <button>View Messages</button>
