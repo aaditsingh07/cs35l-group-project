@@ -8,7 +8,7 @@ const JWT_SECRET = "cs35l-secret-key";
 function requireAuth(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Not authenticated." });
-  try {
+  try {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     req.user = jwt.verify(token, JWT_SECRET);
     next();
   } catch {
@@ -76,7 +76,14 @@ router.get("/conversations/:id/messages", requireAuth, (req, res) => {
     if (!me || me.group_id !== conv.group_id) {
       return res.status(403).json({ error: "Not a member of this group." });
     }
-
+    
+    db.prepare(`
+      UPDATE messages
+      SET is_read = 1
+      WHERE group_conversation_id = ?
+        AND sender_id != ?
+    `).run(conversationId, userId);
+    
     const messages = db
       .prepare(
         `SELECT m.id, m.content, m.created_at, m.sender_id, u.name AS sender_name
@@ -96,7 +103,14 @@ router.get("/conversations/:id/messages", requireAuth, (req, res) => {
   if (conv.from_user !== userId && conv.to_user !== userId) {
     return res.status(403).json({ error: "Not a participant." });
   }
-
+  
+  db.prepare(`
+    UPDATE messages
+    SET is_read = 1
+    WHERE user_conversation_id = ?
+      AND sender_id != ?
+  `).run(conversationId, userId);
+  
   const messages = db
     .prepare(
       `SELECT m.id, m.content, m.created_at, m.sender_id, u.name AS sender_name
@@ -134,9 +148,14 @@ router.post("/conversations/:id/messages", requireAuth, (req, res) => {
 
     const result = db
       .prepare(
-        `INSERT INTO messages (group_conversation_id, sender_id, content) VALUES (?, ?, ?)`,
+        `INSERT INTO messages (
+          group_conversation_id,
+          sender_id,
+          content,
+          is_read
+        ) VALUES (?, ?, ?, ?)`,
       )
-      .run(conversationId, userId, content.trim());
+      .run(conversationId, userId, content.trim(), 0);
 
     const message = db
       .prepare(
@@ -159,9 +178,14 @@ router.post("/conversations/:id/messages", requireAuth, (req, res) => {
 
   const result = db
     .prepare(
-      `INSERT INTO messages (user_conversation_id, sender_id, content) VALUES (?, ?, ?)`,
+      `INSERT INTO messages (
+        user_conversation_id,
+        sender_id,
+        content,
+        is_read
+      ) VALUES (?, ?, ?, ?)`,
     )
-    .run(conversationId, userId, content.trim());
+    .run(conversationId, userId, content.trim(), 0);
 
   const message = db
     .prepare(
@@ -199,6 +223,36 @@ router.post("/conversations", requireAuth, (req, res) => {
     .run(fromUserId, toUserId, fromUserId);
 
   res.json({ conversationId: result.lastInsertRowid });
+});
+
+router.get("/unread-count", requireAuth, (req, res) => {
+  const userId = req.user.userId;
+
+  const result = db.prepare(`
+    SELECT COUNT(*) AS count
+    FROM messages m
+    WHERE m.is_read = 0
+      AND m.sender_id != ?
+      AND (
+        m.user_conversation_id IN (
+          SELECT id
+          FROM user_conversations
+          WHERE from_user = ?
+             OR to_user = ?
+        )
+        OR
+        m.group_conversation_id IN (
+          SELECT gc.id
+          FROM group_conversations gc
+          JOIN users u ON u.group_id = gc.group_id
+          WHERE u.id = ?
+        )
+      )
+  `).get(userId, userId, userId, userId);
+
+  res.json({
+    count: result.count,
+  });
 });
 
 module.exports = router;

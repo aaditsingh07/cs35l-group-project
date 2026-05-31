@@ -74,6 +74,13 @@ db.exec(`
 
 const messageCols = db.prepare(`PRAGMA table_info(messages)`).all();
 const messageColNames = messageCols.map((c) => c.name);
+
+if (!messageColNames.includes("is_read")) {
+  db.exec(`
+    ALTER TABLE messages
+    ADD COLUMN is_read INTEGER DEFAULT 0
+  `);
+}
 if (!messageColNames.includes("sender_id")) {
   db.exec(`ALTER TABLE messages ADD COLUMN sender_id INTEGER REFERENCES users(id)`);
 }

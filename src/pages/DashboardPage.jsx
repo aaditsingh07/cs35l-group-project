@@ -6,7 +6,31 @@ export default function DashboardPage() {
 
   const fullName = localStorage.getItem("name") || "there";
   const name = fullName.split(" ")[0];
+  const [unreadCount, setUnreadCount] = React.useState(0);
 
+  React.useEffect(() => {
+    async function fetchUnreadCount() {
+      try {
+        const token = localStorage.getItem("token");
+  
+        const res = await fetch(
+          "http://localhost:5001/api/unread-count",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+  
+        const data = await res.json();
+        setUnreadCount(data.count || 0);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  
+    fetchUnreadCount();
+  }, []);
   function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
@@ -117,7 +141,34 @@ export default function DashboardPage() {
             boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           }}
         >
-          <h3>💬 Your Messages</h3>
+          <h3
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  }}
+>
+  💬 Your Messages
+
+  {unreadCount > 0 && (
+    <span
+      style={{
+        background: "#DC3545",
+        color: "white",
+        borderRadius: "999px",
+        minWidth: "24px",
+        height: "24px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: "0.75rem",
+        fontWeight: "bold",
+      }}
+    >
+      {unreadCount}
+    </span>
+  )}
+</h3>
           <p>View your group & personal messages.</p>
           <Link to="/messages">
             <button>View Messages</button>
