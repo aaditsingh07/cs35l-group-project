@@ -43,6 +43,12 @@ The goal of the app is to make team collaboration easier by keeping group inform
 - Admins can create and manage project groups.
 - Admins can search users by name or email.
 
+### Messaging
+- Users can send direct messages to other users.
+- Users can participate in group conversations.
+- Unread message notifications appear on the dashboard.
+- Admins can access messages directly from the Admin Dashboard.
+
 ---
 
 ## Tech Stack
@@ -134,6 +140,7 @@ After creating the admin account, log in through the app using the admin email a
    - Tasks
    - Meetings
    - Group information
+   - Messages (unread messages show)
 5. The tasks page allows users to create, complete, delete, and search tasks.
 6. The group page displays the user's assigned group and group members.
 7. Admin users can access admin tools to manage users and groups.
@@ -243,7 +250,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 The landing page introduces the purpose of GroupHub and provides navigation to the Log In and Sign Up pages.
 
-![Welcome Page](./screenshots/welcome.png)
+![Welcome Page](./screenshots/welcome.jpg)
 
 ---
 
@@ -251,7 +258,7 @@ The landing page introduces the purpose of GroupHub and provides navigation to t
 
 Users can log into their accounts using their email and password.
 
-![Login Page](./screenshots/login.png)
+![Login Page](./screenshots/login.jpg)
 
 ---
 
@@ -259,7 +266,7 @@ Users can log into their accounts using their email and password.
 
 New users can create an account by entering their name, email, and password.
 
-![Sign Up Page](./screenshots/signup.png)
+![Sign Up Page](./screenshots/signup.jpg)
 
 ---
 
@@ -269,8 +276,9 @@ The dashboard acts as the main navigation hub after login. Users can access:
 - Tasks
 - Meetings
 - Group Information
+- Personal Messages (unread messages notification count is directly displayed on the dashboard)
 
-![Dashboard Page](./screenshots/dashboard.png)
+![Dashboard Page](./screenshots/dashboard.jpg)
 
 ---
 
@@ -278,4 +286,28 @@ The dashboard acts as the main navigation hub after login. Users can access:
 
 Users can view their assigned project group and current group members.
 
-![Group Page](./screenshots/group.png)
+![Group Page](./screenshots/group.jpg)
+
+---
+
+## Tasks Page
+
+Users can create, complete, delete, and search for tasks.
+
+![Tasks Page](./screenshots/tasks.jpg)
+
+---
+
+## Meetings Page
+
+Users can coordinate and manage group meetings.
+
+![Meetings Page](./screenshots/meetings.jpg)
+
+---
+
+## Messages Page
+
+Users can participate in direct and group conversations and receive unread message notifications.
+
+![Messages Page](./screenshots/messages.jpg)
