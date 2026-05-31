@@ -255,16 +255,23 @@ export default function AdminDashboard() {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem" }}>
-        {["users", "groups", "tasks"].map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            style={{ fontWeight: tab === t ? "bold" : "normal" }}
-          >
-            {t.charAt(0).toUpperCase() + t.slice(1)}
-          </button>
-        ))}
-      </div>
+  {["users", "groups", "tasks"].map((t) => (
+    <button
+      key={t}
+      onClick={() => setTab(t)}
+      style={{ fontWeight: "bold" }}
+    >
+      {t.charAt(0).toUpperCase() + t.slice(1)}
+    </button>
+  ))}
+
+  <button
+    onClick={() => navigate("/messages")}
+    style={{ fontWeight: "bold" }}
+  >
+    Messages
+  </button>
+</div>
 
       {tab === "users" && (
         <>
