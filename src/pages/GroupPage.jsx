@@ -4,23 +4,11 @@ import { Link } from "react-router-dom";
 const BASE = "http://localhost:5001";
 
 function GroupPage() {
-  // ========================================
-  // State variables
-  // group: stores the user's assigned group
-  // members: stores the users in the same group
-  // loading: true while the page is waiting for backend data
-  // error: stores an error message if something goes wrong
-  // ========================================
   const [group, setGroup] = React.useState(null);
   const [members, setMembers] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState("");
 
-  // ========================================
-  // Load group data from the backend
-  // This runs once when the page first opens.
-  // The backend uses the token to know which user is logged in.
-  // ========================================
   React.useEffect(() => {
     async function fetchMyGroup() {
       const token = localStorage.getItem("token");
@@ -51,64 +39,67 @@ function GroupPage() {
     fetchMyGroup();
   }, []);
 
-  // ========================================
-  // Loading display
-  // This shows while the frontend is waiting for backend data.
-  // ========================================
   if (loading) {
     return (
-      <div>
-        <h1>Your Group</h1>
+      <div
+        style={{
+          maxWidth: "900px",
+          margin: "0 auto",
+          padding: "2rem",
+          textAlign: "center",
+        }}
+      >
+        <h1>🛡️ Your Group</h1>
         <p>Loading group information...</p>
       </div>
     );
   }
 
-  // ========================================
-  // Main page UI
-  // Shows the user's assigned group and group members.
-  // ========================================
   return (
-    <div>
-      {/* ========================================
-          Back link
-          Allows the user to return to the dashboard.
-          ======================================== */}
-      <Link to="/dashboard">Back to Dashboard</Link>
+    <div
+      style={{
+        maxWidth: "900px",
+        margin: "0 auto",
+        padding: "2rem",
+        textAlign: "center",
+      }}
+    >
+      <Link to="/dashboard">← Back to Dashboard</Link>
 
-      {/* ========================================
-          Page title section
-          Explains what this page is for.
-          ======================================== */}
-      <h1>Your Group</h1>
+      <h1>🛡️ Your Group</h1>
 
       <p>
-        This page shows your assigned project group and group members.
+        View your assigned project group and collaborate with teammates.
       </p>
 
-      {/* ========================================
-          Error message section
-          Shows a message if the backend request fails.
-          ======================================== */}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {/* ========================================
-          No group section
-          Shows this if the user is logged in but has not been assigned to a group.
-          ======================================== */}
       {!error && !group && (
-        <div>
+        <div
+          style={{
+            background: "white",
+            padding: "2rem",
+            borderRadius: "16px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            marginTop: "2rem",
+          }}
+        >
           <h2>No Group Assigned</h2>
           <p>You have not been assigned to a project group yet.</p>
         </div>
       )}
 
-      {/* ========================================
-          Group information section
-          Shows the group name and description if a group exists.
-          ======================================== */}
       {!error && group && (
-        <div>
+        <div
+          style={{
+            background: "white",
+            padding: "2rem",
+            borderRadius: "16px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            marginTop: "2rem",
+            borderLeft: "6px solid #FF6B6B",
+          }}
+        >
           <h2>Group Information</h2>
 
           <p>
@@ -120,16 +111,19 @@ function GroupPage() {
             {group.description || "No description yet."}
           </p>
 
-          {/* ========================================
-              Group members section
-              Uses .map() to display each member in a list.
-              ======================================== */}
-          <h2>Group Members</h2>
+          <h2 style={{ marginTop: "2rem" }}>Group Members</h2>
 
           {members.length === 0 ? (
             <p>No members found.</p>
           ) : (
-            <ul>
+            <ul
+              style={{
+                textAlign: "left",
+                maxWidth: "500px",
+                margin: "0 auto",
+                lineHeight: "2",
+              }}
+            >
               {members.map((member) => (
                 <li key={member.id}>
                   <strong>{member.name}</strong> — {member.email}
@@ -137,20 +131,25 @@ function GroupPage() {
               ))}
             </ul>
           )}
-          {/* ========================================
-              Group tools section
-              Links to other pages that help the group work together.
-              ======================================== */}
-          <h2>Group Tools</h2>
-          
-          <ul>
-            <li>
-              <Link to="/tasks">Go to Task Board</Link>
-            </li>
-            <li>
-              <Link to="/meetings">Go to Meetings</Link>
-            </li>
-          </ul>
+
+          <h2 style={{ marginTop: "2rem" }}>Group Tools</h2>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "1rem",
+              marginTop: "1rem",
+            }}
+          >
+            <Link to="/tasks">
+              <button>⚡ Task Board</button>
+            </Link>
+
+            <Link to="/meetings">
+              <button>📅 Meetings</button>
+            </Link>
+          </div>
         </div>
       )}
     </div>

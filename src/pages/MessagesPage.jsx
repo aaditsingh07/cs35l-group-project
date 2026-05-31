@@ -205,37 +205,64 @@ export default function MessagesPage() {
       <div
         style={{
           width: "20vw",
-          backgroundColor: "#f4f4f4",
+          background: "white",
+          borderRadius: "16px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          marginRight: "1.5rem",
           padding: "20px",
           paddingTop: "10px",
           overflowY: "auto",
         }}
       >
-        <h1 style={{ margin: "0", padding: "0" }}>Conversations</h1>
+        <h1
+  style={{
+    margin: 0,
+    padding: 0,
+    color: "#0B5ED7",
+    fontSize: "2.5rem",
+  }}
+>
+  💬 Messages
+</h1>
         <div name="group-conversation-list"></div>
         <button
-          onMouseEnter={() => setGroupBtnHover(true)}
-          onMouseLeave={() => setGroupBtnHover(false)}
-          style={{
-            background: "none",
-            border: "none",
-            padding: 0,
-            cursor: "pointer",
-            marginTop: "1rem",
-            fontSize: "1.2em",
-            color: groupBtnHover ? "#555" : "#000",
-            borderBottom: groupBtnHover
-              ? "2px solid #555"
-              : "2px solid transparent",
-          }}
-          onClick={openGroupConversation}
-        >
-          Group Chat
-        </button>
+  onClick={openGroupConversation}
+  style={{
+    background: activeConversation?.isGroup
+      ? "#E8F1FF"
+      : "white",
+    border: activeConversation?.isGroup
+      ? "2px solid #3A86FF"
+      : "1px solid #ddd",
+    padding: "12px",
+    cursor: "pointer",
+    textAlign: "left",
+    width: "100%",
+    color: "#333",
+    borderRadius: "12px",
+    fontWeight: "bold",
+    marginTop: "1rem",
+  }}
+>
+  👥 Group Chat
+</button>
         <div style={{ marginTop: "1rem" }} name="user-conversation-list">
           <h3 style={{ marginTop: "1rem" }}>Direct Messages</h3>
           {!showPicker && (
-            <button onClick={openPicker}>Create Conversation</button>
+            <button
+            onClick={openPicker}
+            style={{
+              padding: "12px 20px",
+              borderRadius: "12px",
+              border: "none",
+              background: "#FFC107",
+              fontWeight: "bold",
+              cursor: "pointer",
+              marginBottom: "1rem",
+            }}
+          >
+            Create Conversation
+          </button>
           )}
           {showPicker && (
             <div style={{ marginBottom: "0.5rem" }}>
@@ -279,15 +306,17 @@ export default function MessagesPage() {
                         loadConversation(conv.id, false, conv.other_user_name)
                       }
                       style={{
-                        background: isActive ? "#e0e0e0" : "none",
-                        border: "none",
-                        padding: "0.25rem 0.5rem",
+                        background: isActive ? "#E8F1FF" : "white",
+                        border: isActive
+                          ? "2px solid #3A86FF"
+                          : "1px solid #ddd",
+                        padding: "12px",
                         cursor: "pointer",
                         textAlign: "left",
                         width: "100%",
                         color: "#333",
-                        fontSize: "1em",
-                        borderRadius: "4px",
+                        borderRadius: "12px",
+                        fontWeight: isActive ? "bold" : "normal",
                       }}
                     >
                       Conversation with {conv.other_user_name}
@@ -308,21 +337,37 @@ export default function MessagesPage() {
         name="message-view"
       >
         {!activeConversation && (
-          <div style={{ margin: "auto", color: "#888" }}>
-            Select a conversation to start messaging.
-          </div>
+          <div
+          style={{
+            margin: "auto",
+            textAlign: "center",
+            color: "#888",
+          }}
+        >
+          <h2>💬 No Conversation Selected</h2>
+          <p>Select a conversation from the left sidebar.</p>
+        </div>
         )}
         {activeConversation && (
           <>
-            <h2 style={{ margin: "0 0 1rem 0" }}>{activeConversation.title}</h2>
+            <h2
+  style={{
+    margin: "0 0 1rem 0",
+    color: "#0B5ED7",
+    fontSize: "2rem",
+  }}
+>
+            💬 {activeConversation.title}
+              </h2>
             <div
               style={{
                 flex: 1,
                 overflowY: "auto",
-                border: "1px solid #ddd",
-                borderRadius: "4px",
+                border: "none",
+                borderRadius: "16px",
                 padding: "0.5rem",
-                background: "#fafafa",
+                background: "white",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                 display: "flex",
                 flexDirection: "column",
                 gap: "0.5rem",
@@ -333,7 +378,15 @@ export default function MessagesPage() {
                 <div style={{ color: "red" }}>{messagesError}</div>
               )}
               {!messagesLoading && !messagesError && messages.length === 0 && (
-                <div style={{ color: "#888" }}>No messages yet.</div>
+                <div
+                style={{
+                  color: "#888",
+                  textAlign: "center",
+                  marginTop: "2rem",
+                }}
+              >
+                💬 No messages yet. Start the conversation!
+              </div>
               )}
               {messages.map((m) => {
                 const mine = m.sender_id === currentUserId;
@@ -343,7 +396,9 @@ export default function MessagesPage() {
                     style={{
                       alignSelf: mine ? "flex-end" : "flex-start",
                       maxWidth: "70%",
-                      background: mine ? "#cce5ff" : "#eee",
+                      background: mine ? "#3A86FF" : "#F2F2F2",
+                      color: mine ? "white" : "#222",
+                      boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
                       padding: "0.5rem 0.75rem",
                       borderRadius: "8px",
                     }}
@@ -351,7 +406,7 @@ export default function MessagesPage() {
                     <div
                       style={{
                         fontSize: "0.75em",
-                        color: "#555",
+                        color: mine ? "rgba(255,255,255,0.8)" : "#555",
                         marginBottom: "0.15rem",
                       }}
                     >
@@ -384,9 +439,9 @@ export default function MessagesPage() {
                 rows={2}
                 style={{
                   flex: 1,
-                  padding: "0.5rem",
-                  borderRadius: "4px",
-                  border: "1px solid #ccc",
+                  borderRadius: "12px",
+                  border: "1px solid #ddd",
+                  padding: "12px",
                   resize: "none",
                   fontFamily: "inherit",
                 }}
@@ -394,7 +449,14 @@ export default function MessagesPage() {
               <button
                 onClick={sendMessage}
                 disabled={!activeConversation.id || sending || !draft.trim()}
-                style={{ padding: "0 1rem" }}
+                style={{
+                  padding: "12px 24px",
+                  borderRadius: "12px",
+                  border: "none",
+                  background: "#FFC107",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                }}
               >
                 {sending ? "Sending..." : "Send"}
               </button>

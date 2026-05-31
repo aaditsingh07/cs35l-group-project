@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
-  const name = localStorage.getItem("name") || "there";
+
+  const fullName = localStorage.getItem("name") || "there";
+  const name = fullName.split(" ")[0];
 
   function handleLogout() {
     localStorage.removeItem("token");
@@ -20,11 +22,11 @@ export default function DashboardPage() {
           alignItems: "center",
         }}
       >
-        <h1>GroupHub</h1>
+        <h1>⚡ GroupHub</h1>
         <button onClick={handleLogout}>Log Out</button>
       </div>
 
-      <h2>Welcome back, {name}!</h2>
+      <h2>Welcome back, {name}! 👋</h2>
 
       <div
         style={{
@@ -34,7 +36,7 @@ export default function DashboardPage() {
           borderRadius: "16px",
           marginTop: "1rem",
           marginBottom: "2rem",
-          boxShadow: "0 6px 15px rgba(0,0,0,0.15)",
+          boxShadow: "0 12px 30px rgba(11,94,215,0.35)",
         }}
       >
         <h2 style={{ margin: 0 }}>
@@ -57,6 +59,7 @@ export default function DashboardPage() {
         <div
           style={{
             border: "none",
+            borderLeft: "6px solid #FFC107",
             borderRadius: 16,
             padding: "1.5rem",
             backgroundColor: "white",
@@ -73,6 +76,7 @@ export default function DashboardPage() {
         <div
           style={{
             border: "none",
+            borderLeft: "6px solid #3A86FF",
             borderRadius: 16,
             padding: "1.5rem",
             backgroundColor: "white",
@@ -89,6 +93,7 @@ export default function DashboardPage() {
         <div
           style={{
             border: "none",
+            borderLeft: "6px solid #FF6B6B",
             borderRadius: 16,
             padding: "1.5rem",
             backgroundColor: "white",
@@ -105,6 +110,7 @@ export default function DashboardPage() {
         <div
           style={{
             border: "none",
+            borderLeft: "6px solid #4CAF50",
             borderRadius: 16,
             padding: "1.5rem",
             backgroundColor: "white",

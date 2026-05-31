@@ -55,17 +55,19 @@ function TaskList({ tasks, onToggle, onDelete }) {
             )}
           </div>
           <button
-            onClick={() => onDelete(task.id)}
-            style={{
-              flexShrink: 0,
-              color: "#c00",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            Delete
-          </button>
+  onClick={() => onDelete(task.id)}
+  style={{
+    padding: "8px 16px",
+    borderRadius: "10px",
+    border: "none",
+    background: "#FF6B6B",
+    color: "white",
+    fontWeight: "bold",
+    cursor: "pointer",
+  }}
+>
+  Delete
+</button>
         </li>
       ))}
     </ul>
@@ -198,28 +200,60 @@ export default function TasksPage() {
   const hasSearchResults =
     filteredPersonalTasks.length > 0 || filteredGroupTasks.length > 0;
   
-  const columnStyle = {
-    flex: 1,
-    minWidth: 0,
-    padding: "1rem",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    background: "#fafafa",
-  };
+    const columnStyle = {
+      flex: 1,
+      minWidth: 0,
+      padding: "1.5rem",
+      borderRadius: "16px",
+      background: "white",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+    };
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div
+    style={{
+      maxWidth: "1200px",
+      margin: "0 auto",
+      padding: "2rem",
+    }}
+  >
+      <div
+  style={{
+    textAlign: "center",
+    marginBottom: "2rem",
+  }}
+>
+<h1
+  style={{
+    color: "#0B5ED7",
+    fontSize: "3rem",
+    marginBottom: "0.5rem",
+  }}
+>
+  ⚡ Task Board
+</h1>
+
+  <p>
+    Manage personal and group tasks in one place.
+  </p>
+</div>
       <div
         style={{
           display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: "1rem",
+          justifyContent: "center",
+          marginBottom: "1.5rem",
         }}
       >
-        <h1 style={{ margin: 0 }}>Task Board</h1>
         <button
-          onClick={() => {
+  style={{
+    padding: "12px 24px",
+    borderRadius: "12px",
+    border: "none",
+    background: "#FFC107",
+    fontWeight: "bold",
+    cursor: "pointer",
+  }}
+  onClick={() => {
             setFormOpen((o) => !o);
             setIsGroupTask(false);
             setError("");
@@ -231,8 +265,24 @@ export default function TasksPage() {
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <div style={{ marginBottom: "1rem", maxWidth: "420px"}}>
-        <label htmlFor="task-search" style={{ fontWeight: 500 }}>
+      <div
+  style={{
+    maxWidth: "500px",
+    margin: "0 auto 2rem auto",
+    background: "white",
+    padding: "1.5rem",
+    borderRadius: "16px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+  }}
+>
+<label
+  htmlFor="task-search"
+  style={{
+    fontWeight: "bold",
+    display: "block",
+    marginBottom: "0.5rem",
+  }}
+>
           Search Tasks
         </label>
         <input
@@ -253,7 +303,19 @@ export default function TasksPage() {
       </div>
 
       {formOpen && (
-        <form
+  <div
+    style={{
+      background: "white",
+      padding: "2rem",
+      borderRadius: "16px",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+      marginBottom: "2rem",
+      maxWidth: "600px",
+      marginLeft: "auto",
+      marginRight: "auto",
+    }}
+  >
+    <form
           onSubmit={handleCreate}
           noValidate
           style={{
@@ -261,7 +323,8 @@ export default function TasksPage() {
             display: "flex",
             flexDirection: "column",
             gap: "0.5rem",
-            maxWidth: "400px",
+            maxWidth: "500px",
+            margin: "0 auto",
           }}
         >
           <div>
@@ -322,10 +385,23 @@ export default function TasksPage() {
               Group
             </label>
           </div>
-          <button type="submit" style={{ alignSelf: "flex-start" }}>
-            Add Task
-          </button>
+          <button
+  type="submit"
+  style={{
+    alignSelf: "center",
+    padding: "12px 24px",
+    borderRadius: "12px",
+    border: "none",
+    background: "#3A86FF",
+    color: "white",
+    fontWeight: "bold",
+    cursor: "pointer",
+  }}
+>
+  Add Task
+</button>
         </form>
+        </div>
       )}
 
       {loading ? (
@@ -340,8 +416,13 @@ export default function TasksPage() {
         <div
           style={{ display: "flex", gap: "1.5rem", alignItems: "flex-start" }}
         >
-          <div style={columnStyle}>
-            <h2 style={{ marginTop: 0 }}>Personal Tasks</h2>
+          <div
+  style={{
+    ...columnStyle,
+    borderLeft: "6px solid #FFC107",
+  }}
+>
+  <h2 style={{ marginTop: 0 }}>⚡ Personal Tasks</h2>
             <TaskList
               tasks={filteredPersonalTasks}
               onToggle={handleToggle}
@@ -350,8 +431,13 @@ export default function TasksPage() {
           </div>
 
           {hasGroup && (
-            <div style={columnStyle}>
-              <h2 style={{ marginTop: 0 }}>Group Tasks</h2>
+            <div
+            style={{
+              ...columnStyle,
+              borderLeft: "6px solid #3A86FF",
+            }}
+          >
+            <h2 style={{ marginTop: 0 }}>👥 Group Tasks</h2>
               <TaskList
                 tasks={filteredGroupTasks}
                 onToggle={handleToggle}
