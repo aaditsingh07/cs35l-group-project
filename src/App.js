@@ -14,14 +14,6 @@ import AdminManageUsers from "./pages/AdminManageUsers";
 import AdminManageGroups from "./pages/AdminManageGroups";
 import AdminViewTasks from "./pages/AdminViewTasks";
 
-function ProtectedRoute({ children }) {
-  return localStorage.getItem("token") ? (
-    children
-  ) : (
-    <Navigate to="/login" replace />
-  );
-}
-
 function PublicRoute({ children }) {
   return localStorage.getItem("token") ? (
     <Navigate to="/dashboard" replace />
@@ -30,12 +22,28 @@ function PublicRoute({ children }) {
   );
 }
 
+function StudentRoute({ children }) {
+  const token = localStorage.getItem("token");
+  if (!token) return <Navigate to="/login" replace />;
+  if (localStorage.getItem("account_type") === "admin")
+    return <Navigate to="/admin" replace />;
+  return children;
+}
+
 function AdminRoute({ children }) {
   const token = localStorage.getItem("token");
   if (!token) return <Navigate to="/login" replace />;
   if (localStorage.getItem("account_type") !== "admin")
     return <Navigate to="/dashboard" replace />;
   return children;
+}
+
+function ProtectedRoute({ children }) {
+  return localStorage.getItem("token") ? (
+    children
+  ) : (
+    <Navigate to="/login" replace />
+  );
 }
 
 function App() {
@@ -69,32 +77,40 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            <StudentRoute>
               <DashboardPage />
-            </ProtectedRoute>
+            </StudentRoute>
           }
         />
         <Route
           path="/tasks"
           element={
-            <ProtectedRoute>
+            <StudentRoute>
               <TasksPage />
-            </ProtectedRoute>
+            </StudentRoute>
           }
         />
         <Route
           path="/group"
           element={
-            <ProtectedRoute>
+            <StudentRoute>
               <GroupPage />
-            </ProtectedRoute>
+            </StudentRoute>
           }
         />
         <Route
           path="/meetings"
           element={
-            <ProtectedRoute>
+            <StudentRoute>
               <MeetingsPage />
+            </StudentRoute>
+          }
+        />
+        <Route
+          path="/messages"
+          element={
+            <ProtectedRoute>
+              <MessagesPage />
             </ProtectedRoute>
           }
         />
@@ -104,14 +120,6 @@ function App() {
             <AdminRoute>
               <AdminDashboard />
             </AdminRoute>
-          }
-        />
-        <Route
-          path="/messages"
-          element={
-            <ProtectedRoute>
-              <MessagesPage />
-            </ProtectedRoute>
           }
         />
         <Route
