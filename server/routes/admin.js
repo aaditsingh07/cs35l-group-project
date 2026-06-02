@@ -205,10 +205,10 @@ router.post("/groups/auto-assign", (req, res) => {
 
 router.patch("/admin/users/:id/password", async (req, res) => {
   const { new_password } = req.body;
-  const hashedPassword = await bcrypt.hash(new_password, 10);
   if (!new_password) {
     return res.status(400).json({ error: "New password is required." });
   }
+  const hashedPassword = await bcrypt.hash(new_password, 10);
   const result = db
     .prepare("UPDATE users SET password = ? WHERE id = ?")
     .run(hashedPassword, req.params.id);
