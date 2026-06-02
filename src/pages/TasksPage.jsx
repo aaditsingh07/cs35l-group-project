@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const BASE = "http://localhost:5001";
 
@@ -55,19 +56,19 @@ function TaskList({ tasks, onToggle, onDelete }) {
             )}
           </div>
           <button
-  onClick={() => onDelete(task.id)}
-  style={{
-    padding: "8px 16px",
-    borderRadius: "10px",
-    border: "none",
-    background: "#FF6B6B",
-    color: "white",
-    fontWeight: "bold",
-    cursor: "pointer",
-  }}
->
-  Delete
-</button>
+            onClick={() => onDelete(task.id)}
+            style={{
+              padding: "8px 16px",
+              borderRadius: "10px",
+              border: "none",
+              background: "#FF6B6B",
+              color: "white",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            Delete
+          </button>
         </li>
       ))}
     </ul>
@@ -185,75 +186,54 @@ export default function TasksPage() {
 
   function matchesSearch(task) {
     const keyword = searchTerm.trim().toLowerCase();
-
-    if (!keyword) {
-      return true;
-    }
-
+    if (!keyword) return true;
     return (
       task.title.toLowerCase().includes(keyword) ||
       (task.description || "").toLowerCase().includes(keyword)
     );
   }
+
   const filteredPersonalTasks = personalTasks.filter(matchesSearch);
   const filteredGroupTasks = groupTasks.filter(matchesSearch);
   const hasSearchResults =
     filteredPersonalTasks.length > 0 || filteredGroupTasks.length > 0;
-  
-    const columnStyle = {
-      flex: 1,
-      minWidth: 0,
-      padding: "1.5rem",
-      borderRadius: "16px",
-      background: "white",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-    };
+
+  const columnStyle = {
+    flex: 1,
+    minWidth: 0,
+    padding: "1.5rem",
+    borderRadius: "16px",
+    background: "white",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+  };
 
   return (
-    <div
-    style={{
-      maxWidth: "1200px",
-      margin: "0 auto",
-      padding: "2rem",
-    }}
-  >
-      <div
-  style={{
-    textAlign: "center",
-    marginBottom: "2rem",
-  }}
->
-<h1
-  style={{
-    color: "#0B5ED7",
-    fontSize: "3rem",
-    marginBottom: "0.5rem",
-  }}
->
-  ⚡ Task Board
-</h1>
-
-  <p>
-    Manage personal and group tasks in one place.
-  </p>
-</div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "1.5rem",
-        }}
+    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
+      <Link
+        to="/dashboard"
+        style={{ textDecoration: "none", color: "#0B5ED7", fontWeight: "bold" }}
       >
+        ← Back to Dashboard
+      </Link>
+
+      <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+        <h1 style={{ color: "#0B5ED7", fontSize: "3rem", marginBottom: "0.5rem" }}>
+          ⚡ Task Board
+        </h1>
+        <p>Manage personal and group tasks in one place.</p>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.5rem" }}>
         <button
-  style={{
-    padding: "12px 24px",
-    borderRadius: "12px",
-    border: "none",
-    background: "#FFC107",
-    fontWeight: "bold",
-    cursor: "pointer",
-  }}
-  onClick={() => {
+          style={{
+            padding: "12px 24px",
+            borderRadius: "12px",
+            border: "none",
+            background: "#FFC107",
+            fontWeight: "bold",
+            cursor: "pointer",
+          }}
+          onClick={() => {
             setFormOpen((o) => !o);
             setIsGroupTask(false);
             setError("");
@@ -266,23 +246,19 @@ export default function TasksPage() {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <div
-  style={{
-    maxWidth: "500px",
-    margin: "0 auto 2rem auto",
-    background: "white",
-    padding: "1.5rem",
-    borderRadius: "16px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-  }}
->
-<label
-  htmlFor="task-search"
-  style={{
-    fontWeight: "bold",
-    display: "block",
-    marginBottom: "0.5rem",
-  }}
->
+        style={{
+          maxWidth: "500px",
+          margin: "0 auto 2rem auto",
+          background: "white",
+          padding: "1.5rem",
+          borderRadius: "16px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+        }}
+      >
+        <label
+          htmlFor="task-search"
+          style={{ fontWeight: "bold", display: "block", marginBottom: "0.5rem" }}
+        >
           Search Tasks
         </label>
         <input
@@ -299,155 +275,128 @@ export default function TasksPage() {
             border: "1px solid #ccc",
             borderRadius: "6px",
           }}
-          />
+        />
       </div>
 
       {formOpen && (
-  <div
-    style={{
-      background: "white",
-      padding: "2rem",
-      borderRadius: "16px",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-      marginBottom: "2rem",
-      maxWidth: "600px",
-      marginLeft: "auto",
-      marginRight: "auto",
-    }}
-  >
-    <form
-          onSubmit={handleCreate}
-          noValidate
+        <div
           style={{
-            marginBottom: "1.5rem",
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.5rem",
-            maxWidth: "500px",
-            margin: "0 auto",
+            background: "white",
+            padding: "2rem",
+            borderRadius: "16px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            marginBottom: "2rem",
+            maxWidth: "600px",
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
         >
-          <div>
-            <label htmlFor="title">Title</label>
-            <input
-              id="title"
-              type="text"
-              placeholder="Task title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-              style={{ display: "block", width: "100%", marginTop: "0.25rem" }}
-            />
-          </div>
-          <div>
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              placeholder="What needs to be done?"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
-              style={{ display: "block", width: "100%", marginTop: "0.25rem" }}
-            />
-          </div>
-          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <span style={{ fontWeight: 500 }}>Type:</span>
-            <label
+          <form
+            onSubmit={handleCreate}
+            noValidate
+            style={{
+              marginBottom: "1.5rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: "0.5rem",
+              maxWidth: "500px",
+              margin: "0 auto",
+            }}
+          >
+            <div>
+              <label htmlFor="title">Title</label>
+              <input
+                id="title"
+                type="text"
+                placeholder="Task title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                style={{ display: "block", width: "100%", marginTop: "0.25rem" }}
+              />
+            </div>
+            <div>
+              <label htmlFor="description">Description</label>
+              <textarea
+                id="description"
+                placeholder="What needs to be done?"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                style={{ display: "block", width: "100%", marginTop: "0.25rem" }}
+              />
+            </div>
+            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+              <span style={{ fontWeight: 500 }}>Type:</span>
+              <label style={{ display: "flex", alignItems: "center", gap: "0.25rem", cursor: "pointer" }}>
+                <input
+                  type="radio"
+                  name="taskType"
+                  checked={!isGroupTask}
+                  onChange={() => setIsGroupTask(false)}
+                />
+                Personal
+              </label>
+              <label style={{ display: "flex", alignItems: "center", gap: "0.25rem", cursor: "pointer" }}>
+                <input
+                  type="radio"
+                  name="taskType"
+                  checked={isGroupTask}
+                  onChange={() => setIsGroupTask(true)}
+                />
+                Group
+              </label>
+            </div>
+            <button
+              type="submit"
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.25rem",
+                alignSelf: "center",
+                padding: "12px 24px",
+                borderRadius: "12px",
+                border: "none",
+                background: "#3A86FF",
+                color: "white",
+                fontWeight: "bold",
                 cursor: "pointer",
               }}
             >
-              <input
-                type="radio"
-                name="taskType"
-                checked={!isGroupTask}
-                onChange={() => setIsGroupTask(false)}
-              />
-              Personal
-            </label>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.25rem",
-                cursor: "pointer",
-              }}
-            >
-              <input
-                type="radio"
-                name="taskType"
-                checked={isGroupTask}
-                onChange={() => setIsGroupTask(true)}
-              />
-              Group
-            </label>
-          </div>
-          <button
-  type="submit"
-  style={{
-    alignSelf: "center",
-    padding: "12px 24px",
-    borderRadius: "12px",
-    border: "none",
-    background: "#3A86FF",
-    color: "white",
-    fontWeight: "bold",
-    cursor: "pointer",
-  }}
->
-  Add Task
-</button>
-        </form>
+              Add Task
+            </button>
+          </form>
         </div>
       )}
 
       {loading ? (
         <p>Loading tasks...</p>
       ) : (
-      <>
-        {searchTerm.trim() && !hasSearchResults && (
-        <p style={{ color: "#888", fontStyle: "italic" }}>
-          No tasks match your search.
-        </p>
-      )}
-        <div
-          style={{ display: "flex", gap: "1.5rem", alignItems: "flex-start" }}
-        >
-          <div
-  style={{
-    ...columnStyle,
-    borderLeft: "6px solid #FFC107",
-  }}
->
-  <h2 style={{ marginTop: 0 }}>⚡ Personal Tasks</h2>
-            <TaskList
-              tasks={filteredPersonalTasks}
-              onToggle={handleToggle}
-              onDelete={handleDelete}
-            />
-          </div>
-
-          {hasGroup && (
-            <div
-            style={{
-              ...columnStyle,
-              borderLeft: "6px solid #3A86FF",
-            }}
-          >
-            <h2 style={{ marginTop: 0 }}>👥 Group Tasks</h2>
+        <>
+          {searchTerm.trim() && !hasSearchResults && (
+            <p style={{ color: "#888", fontStyle: "italic" }}>
+              No tasks match your search.
+            </p>
+          )}
+          <div style={{ display: "flex", gap: "1.5rem", alignItems: "flex-start" }}>
+            <div style={{ ...columnStyle, borderLeft: "6px solid #FFC107" }}>
+              <h2 style={{ marginTop: 0 }}>⚡ Personal Tasks</h2>
               <TaskList
-                tasks={filteredGroupTasks}
+                tasks={filteredPersonalTasks}
                 onToggle={handleToggle}
                 onDelete={handleDelete}
               />
             </div>
-          )}
-        </div>
-      </>
-    )}
+            {hasGroup && (
+              <div style={{ ...columnStyle, borderLeft: "6px solid #3A86FF" }}>
+                <h2 style={{ marginTop: 0 }}>👥 Group Tasks</h2>
+                <TaskList
+                  tasks={filteredGroupTasks}
+                  onToggle={handleToggle}
+                  onDelete={handleDelete}
+                />
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
