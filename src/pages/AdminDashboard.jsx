@@ -89,7 +89,7 @@ export default function AdminDashboard() {
           <span style={{ fontWeight: "bold" }}>⚡ {stats.tasks} Tasks</span>
         </div>
       </div>
-
+        
       <div
         style={{
           display: "grid",
@@ -98,6 +98,23 @@ export default function AdminDashboard() {
           marginTop: "2rem",
         }}
       >
+        <div
+          style={{
+            border: "none",
+            borderLeft: "6px solid #3A86FF",
+            borderRadius: 16,
+            padding: "1.5rem",
+            backgroundColor: "white",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          }}
+        >
+          <h3>👥 Manage Users</h3>
+          <p>View all users, change roles, and reset passwords.</p>
+          <Link to="/admin/users">
+            <button>Manage Users</button>
+          </Link>
+        </div>
+        
         <div
           style={{
             border: "none",
@@ -112,23 +129,6 @@ export default function AdminDashboard() {
           <p>Create groups, assign users, and auto-assign by group size.</p>
           <Link to="/admin/groups">
             <button>Manage Groups</button>
-          </Link>
-        </div>
-
-        <div
-          style={{
-            border: "none",
-            borderLeft: "6px solid #3A86FF",
-            borderRadius: 16,
-            padding: "1.5rem",
-            backgroundColor: "white",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-          }}
-        >
-          <h3>👥 Manage Users</h3>
-          <p>View all users, change roles, and reset passwords.</p>
-          <Link to="/admin/groups">
-            <button>Manage Users</button>
           </Link>
         </div>
 
