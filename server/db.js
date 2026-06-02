@@ -51,6 +51,17 @@ db.exec(`
 `);
 
 db.exec(`
+  INSERT INTO group_conversations (group_id, title)
+  SELECT g.id, g.name
+  FROM groups g
+  WHERE NOT EXISTS (
+    SELECT 1
+    FROM group_conversations gc
+    WHERE gc.group_id = g.id
+  )
+`); 
+
+db.exec(`
   CREATE TABLE IF NOT EXISTS user_conversations (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     from_user     INTEGER REFERENCES users(id) ON DELETE CASCADE,
