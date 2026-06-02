@@ -9,27 +9,23 @@ export default function MeetingPage() {
   const [meetings, setMeetings] = React.useState([]);
 
   React.useEffect(() => {
-    async function fetchMeetings() {
-      const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-      try {
-        const res = await fetch(`${BASE}/meetings`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const data = await res.json();
+    fetch(`${BASE}/meetings`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
         setMeetings(data);
-      } catch (err) {
+      })
+      .catch((err) => {
         console.error(err);
-      }
-    }
-
-    fetchMeetings();
+      });
   }, []);
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
 
     if (!meetingTitle.trim() || !meetingTime) {
@@ -38,47 +34,46 @@ export default function MeetingPage() {
 
     const token = localStorage.getItem("token");
 
-    try {
-      const res = await fetch(`${BASE}/meetings`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          title: meetingTitle.trim(),
-          meeting_time: meetingTime,
-        }),
+    fetch(`${BASE}/meetings`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        title: meetingTitle.trim(),
+        meeting_time: meetingTime,
+      }),
+    })
+      .then((res) => res.json())
+      .then((newMeeting) => {
+        setMeetings([newMeeting, ...meetings]);
+
+        setMeetingTitle("");
+        setMeetingTime("");
+      })
+      .catch((err) => {
+        console.error(err);
       });
-
-      const newMeeting = await res.json();
-
-      setMeetings([newMeeting, ...meetings]);
-
-      setMeetingTitle("");
-      setMeetingTime("");
-    } catch (err) {
-      console.error(err);
-    }
   }
 
-  async function handleDelete(id) {
+  function handleDelete(id) {
     const token = localStorage.getItem("token");
 
-    try {
-      await fetch(`${BASE}/meetings/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    fetch(`${BASE}/meetings/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(() => {
+        setMeetings(
+          meetings.filter((meeting) => meeting.id !== id)
+        );
+      })
+      .catch((err) => {
+        console.error(err);
       });
-
-      setMeetings(
-        meetings.filter((meeting) => meeting.id !== id)
-      );
-    } catch (err) {
-      console.error(err);
-    }
   }
 
   return (

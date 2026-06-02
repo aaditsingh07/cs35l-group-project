@@ -152,10 +152,13 @@ router.post("/groups", (req, res) => {
 router.post("/groups/auto-assign", (req, res) => {
   const { groupSize } = req.body;
   const size = parseInt(groupSize);
-  if (!size || size < 2) return res.status(400).json({ error: "Group size must be at least 2." });
+  if (!size || size < 2)
+    return res.status(400).json({ error: "Group size must be at least 2." });
 
   const unassigned = db
-    .prepare("SELECT id FROM users WHERE group_id IS NULL AND account_type = 'user'")
+    .prepare(
+      "SELECT id FROM users WHERE group_id IS NULL AND account_type = 'user'",
+    )
     .all();
 
   if (unassigned.length === 0) {
@@ -181,10 +184,15 @@ router.post("/groups/auto-assign", (req, res) => {
 
   const insertGroup = db.prepare("INSERT INTO groups (name) VALUES (?)");
   const assignUser = db.prepare("UPDATE users SET group_id = ? WHERE id = ?");
+  const insertConversation = db.prepare(
+    "INSERT INTO group_conversations (group_id, title) VALUES (?, ?)",
+  );
 
   const tx = db.transaction(() => {
     for (let i = 0; i < chunks.length; i++) {
-      const { lastInsertRowid: groupId } = insertGroup.run(`Auto Group ${i + 1}`);
+      const name = `Auto Group ${i + 1}`;
+      const { lastInsertRowid: groupId } = insertGroup.run(name);
+      insertConversation.run(groupId, name);
       for (const user of chunks[i]) {
         assignUser.run(groupId, user.id);
       }
