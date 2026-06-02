@@ -10,6 +10,7 @@ import GroupPage from "./pages/GroupPage";
 import MeetingsPage from "./pages/MeetingsPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import MessagesPage from "./pages/MessagesPage";
+import AdminGroups from "./pages/AdminGroups";
 
 function ProtectedRoute({ children }) {
   return localStorage.getItem("token") ? (
@@ -111,7 +112,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route 
+          path="/admin/groups" 
+          element={
+          <ProtectedRoute requiredRole="admin">
+              <AdminGroups />
+          </ProtectedRoute>
+} />
       </Routes>
+      
     </BrowserRouter>
   );
 }
