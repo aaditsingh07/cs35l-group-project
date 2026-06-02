@@ -12,6 +12,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import MessagesPage from "./pages/MessagesPage";
 import AdminManageUsers from "./pages/AdminManageUsers";
 import AdminManageGroups from "./pages/AdminManageGroups";
+import AdminViewTasks from "./pages/AdminViewTasks";
 
 function ProtectedRoute({ children }) {
   return localStorage.getItem("token") ? (
@@ -113,26 +114,31 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
-        <Route 
-          path="/admin/groups" 
+        <Route
+          path="/admin/groups"
           element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminManageGroups />
-          </ProtectedRoute>} />
-        
-        <Route 
-          path="/admin/users" 
+            <AdminRoute>
+              <AdminManageGroups />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/tasks"
           element={
-          <ProtectedRoute requiredRole="admin">
+            <AdminRoute>
+              <AdminViewTasks />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <AdminRoute>
               <AdminManageUsers />
-          </ProtectedRoute>
-        
-        
-        
-} />
+            </AdminRoute>
+          }
+        />
       </Routes>
-      
     </BrowserRouter>
   );
 }

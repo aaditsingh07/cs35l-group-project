@@ -144,7 +144,7 @@ export default function AdminDashboard() {
         >
           <h3>⚡ All Tasks</h3>
           <p>View all personal and group tasks across the platform.</p>
-          <Link to="/admin/groups">
+          <Link to="/admin/tasks">
             <button>View Tasks</button>
           </Link>
         </div>
