@@ -193,7 +193,24 @@ export default function MessagesPage() {
 
   React.useEffect(() => {
     fetchMessages();
+    const interval = setInterval(fetchMessages, 5000);
+  return () => clearInterval(interval);
+
   }, []);
+
+  React.useEffect(() => {
+  if (!activeConversation?.id) return;
+  const interval = setInterval(() => {
+    fetch(
+      `${BASE}/api/conversations/${activeConversation.id}/messages?isGroup=${activeConversation.isGroup ? "true" : "false"}`,
+      { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+    )
+      .then(res => res.json())
+      .then(data => { if (Array.isArray(data)) setMessages(data); })
+      .catch(() => {});
+  }, 3000);
+  return () => clearInterval(interval);
+}, [activeConversation?.id]);
 
   React.useEffect(() => {
     if (messagesEndRef.current) {
