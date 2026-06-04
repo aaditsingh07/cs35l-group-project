@@ -83,23 +83,6 @@ export default function DashboardPage() {
         <div
           style={{
             border: "none",
-            borderLeft: "6px solid #FFC107",
-            borderRadius: 16,
-            padding: "1.5rem",
-            backgroundColor: "white",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-          }}
-        >
-          <h3>⚡ Tasks</h3>
-          <p>Manage and track your group's tasks.</p>
-          <Link to="/tasks">
-            <button>View Tasks</button>
-          </Link>
-        </div>
-
-        <div
-          style={{
-            border: "none",
             borderLeft: "6px solid #3A86FF",
             borderRadius: 16,
             padding: "1.5rem",
@@ -113,7 +96,6 @@ export default function DashboardPage() {
             <button>View Meetings</button>
           </Link>
         </div>
-
         <div
           style={{
             border: "none",
@@ -130,7 +112,22 @@ export default function DashboardPage() {
             <button>View Group</button>
           </Link>
         </div>
-
+        <div
+          style={{
+            border: "none",
+            borderLeft: "6px solid #FFC107",
+            borderRadius: 16,
+            padding: "1.5rem",
+            backgroundColor: "white",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          }}
+        >
+          <h3>⚡ Tasks</h3>
+          <p>Manage and track your group's tasks.</p>
+          <Link to="/tasks">
+            <button>View Tasks</button>
+          </Link>
+        </div>
         <div
           style={{
             border: "none",
