@@ -173,7 +173,7 @@ The backend uses JWT authentication and bcrypt password hashing to provide secur
 This sequence diagram demonstrates the call and responses between the user, the page, and the backend.
 This includes initial page rendering, conversation creation, conversation loading, message sending, and polling for updates.
 
-![Sequence Diagram](./screenshots/messages_sequence_diagram)
+![Sequence Diagram](./screenshots/messages_sequence_diagram.svg)
 
 ---
 
