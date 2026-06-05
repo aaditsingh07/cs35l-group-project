@@ -5,7 +5,6 @@ const db = require("../db");
 
 const router = express.Router();
 
-// TODO: Placeholder
 const JWT_SECRET = "cs35l-secret-key";
 
 // signup
@@ -38,12 +37,18 @@ router.post("/signup", async (req, res) => {
     .get(result.lastInsertRowid);
 
   const token = jwt.sign(
-    { userId: result.lastInsertRowid, email, account_type: newUser.account_type },
+    {
+      userId: result.lastInsertRowid,
+      email,
+      account_type: newUser.account_type,
+    },
     JWT_SECRET,
     { expiresIn: "7d" },
   );
 
-  res.status(201).json({ token, name, email, account_type: newUser.account_type });
+  res
+    .status(201)
+    .json({ token, name, email, account_type: newUser.account_type });
 });
 
 // login
@@ -72,7 +77,12 @@ router.post("/login", async (req, res) => {
     { expiresIn: "7d" },
   );
 
-  res.json({ token, name: user.name, email: user.email, account_type: user.account_type });
+  res.json({
+    token,
+    name: user.name,
+    email: user.email,
+    account_type: user.account_type,
+  });
 });
 
 module.exports = router;
