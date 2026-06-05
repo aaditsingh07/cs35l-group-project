@@ -157,4 +157,10 @@ db.exec(`
   WHERE NOT EXISTS (SELECT 1 FROM admin_conversations)
 `);
 
+if (!messageColNames.includes("admin_conversation_id")) {
+  db.exec(
+    `ALTER TABLE messages ADD COLUMN admin_conversation_id INTEGER REFERENCES admin_conversations(id)`,
+  );
+}
+
 module.exports = db;
