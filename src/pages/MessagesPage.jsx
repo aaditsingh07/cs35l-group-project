@@ -145,10 +145,17 @@ export default function MessagesPage() {
   function openGroupConversation() {
     const group = conversations.groupConversations[0];
     if (!group) {
-      loadConversation(null, true, "Group Chat");
+      if (isAdmin) {
+        // Admin group chat not yet created — show placeholder
+        loadConversation(null, true, "Admin Group Chat");
+      }
+      // Non-admin ungrouped students can't reach here since the button is hidden
       return;
     }
-    loadConversation(group.id, true, group.title || "Group Chat");
+    const title = isAdmin
+      ? group.title || "Admin Group Chat"
+      : group.title || "Group Chat";
+    loadConversation(group.id, true, title);
   }
 
   function sendMessage() {
@@ -194,23 +201,22 @@ export default function MessagesPage() {
   React.useEffect(() => {
     fetchMessages();
     const interval = setInterval(fetchMessages, 5000);
-  return () => clearInterval(interval);
-
+    return () => clearInterval(interval);
   }, []);
 
   React.useEffect(() => {
-  if (!activeConversation?.id) return;
-  const interval = setInterval(() => {
-    fetch(
-      `${BASE}/api/conversations/${activeConversation.id}/messages?isGroup=${activeConversation.isGroup ? "true" : "false"}`,
-      { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
-    )
-      .then(res => res.json())
-      .then(data => { if (Array.isArray(data)) setMessages(data); })
-      .catch(() => {});
-  }, 3000);
-  return () => clearInterval(interval);
-}, [activeConversation?.id]);
+    if (!activeConversation?.id) return;
+    const interval = setInterval(() => {
+      fetch(
+        `${BASE}/api/conversations/${activeConversation.id}/messages?isGroup=${activeConversation.isGroup ? "true" : "false"}`,
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+      )
+        .then((res) => res.json())
+        .then((data) => { if (Array.isArray(data)) setMessages(data); })
+        .catch(() => {});
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [activeConversation?.id]);
 
   React.useEffect(() => {
     if (messagesEndRef.current) {
@@ -269,26 +275,69 @@ export default function MessagesPage() {
           >
             💬 Messages
           </h1>
+
           <div name="group-conversation-list"></div>
-          <button
-            onClick={openGroupConversation}
-            style={{
-              background: activeConversation?.isGroup ? "#E8F1FF" : "white",
-              border: activeConversation?.isGroup
-                ? "2px solid #3A86FF"
-                : "1px solid #ddd",
-              padding: "12px",
-              cursor: "pointer",
-              textAlign: "left",
-              width: "100%",
-              color: "#333",
-              borderRadius: "12px",
-              fontWeight: "bold",
-              marginTop: "1rem",
-            }}
-          >
-            👥 Group Chat
-          </button>
+
+          {/* Group chat section — three cases */}
+          {isAdmin ? (
+            // Case 1: Admin — always show Admin Group Chat button
+            <button
+              onClick={openGroupConversation}
+              style={{
+                background: activeConversation?.isGroup ? "#E8F1FF" : "white",
+                border: activeConversation?.isGroup
+                  ? "2px solid #3A86FF"
+                  : "1px solid #ddd",
+                padding: "12px",
+                cursor: "pointer",
+                textAlign: "left",
+                width: "100%",
+                color: "#333",
+                borderRadius: "12px",
+                fontWeight: "bold",
+                marginTop: "1rem",
+              }}
+            >
+              🔐 Admin Group Chat
+            </button>
+          ) : conversations.groupConversations.length > 0 ? (
+            // Case 2: Student in a group — show Group Chat button
+            <button
+              onClick={openGroupConversation}
+              style={{
+                background: activeConversation?.isGroup ? "#E8F1FF" : "white",
+                border: activeConversation?.isGroup
+                  ? "2px solid #3A86FF"
+                  : "1px solid #ddd",
+                padding: "12px",
+                cursor: "pointer",
+                textAlign: "left",
+                width: "100%",
+                color: "#333",
+                borderRadius: "12px",
+                fontWeight: "bold",
+                marginTop: "1rem",
+              }}
+            >
+              👥 Group Chat
+            </button>
+          ) : (
+            // Case 3: Student not in a group — show info message
+            <div
+              style={{
+                marginTop: "1rem",
+                padding: "12px",
+                borderRadius: "12px",
+                background: "#FFF8E1",
+                border: "1px solid #FFD54F",
+                color: "#795548",
+                fontSize: "0.875rem",
+              }}
+            >
+              📭 You are not currently assigned to a group.
+            </div>
+          )}
+
           <div style={{ marginTop: "1rem" }} name="user-conversation-list">
             <h3 style={{ marginTop: "1rem" }}>Direct Messages</h3>
             {!showPicker && (
