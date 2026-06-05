@@ -48,7 +48,7 @@ export default function SignupPage() {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {/* Form */}
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit}>
         {/* Name */}
         <div>
           <label htmlFor="name">Name</label>

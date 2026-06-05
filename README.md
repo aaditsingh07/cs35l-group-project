@@ -147,6 +147,14 @@ After creating the admin account, log in through the app using the admin email a
 ---
 ## Architecture Diagrams
 
+### Class Diagram
+
+This diagram illustrates the core data structures used within GroupHub and the relationships between them.
+Users belong to groups, groups contain tasks and meetings, and users can exchange messages either directly or within a group.
+The diagram highlights how the application's main entities interact to support collaboration, communication, task management, and meeting scheduling.
+
+![Class Diagram](./screenshots/classdiagram.png)
+
 ### System Architecture Diagram
 
 This diagram illustrates the overall architecture of the application. 
@@ -160,14 +168,12 @@ The backend uses JWT authentication and bcrypt password hashing to provide secur
 
 ---
 
-### User Flow Diagram
+### Messages Sequence Diagram
 
-This diagram demonstrates how users navigate through the application. 
-Users begin at the welcome page and can either log in or sign up. 
-After successful authentication, users are redirected to the dashboard where they can access groups, tasks, and meetings functionality. 
-Admin users additionally gain access to the admin dashboard for user and group management.
+This sequence diagram demonstrates the call and responses between the user, the page, and the backend.
+This includes initial page rendering, conversation creation, conversation loading, message sending, and polling for updates.
 
-![User Flow Diagram](./screenshots/user-flow-diagram.png)
+![Sequence Diagram](./screenshots/messages_sequence_diagram.svg)
 
 ---
 
