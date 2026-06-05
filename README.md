@@ -147,6 +147,14 @@ After creating the admin account, log in through the app using the admin email a
 ---
 ## Architecture Diagrams
 
+### Class Diagram
+
+This diagram illustrates the core data structures used within GroupHub and the relationships between them.
+Users belong to groups, groups contain tasks and meetings, and users can exchange messages either directly or within a group.
+The diagram highlights how the application's main entities interact to support collaboration, communication, task management, and meeting scheduling.
+
+![Class Diagram](./screenshots/classdiagram.png)
+
 ### System Architecture Diagram
 
 This diagram illustrates the overall architecture of the application. 
