@@ -143,4 +143,18 @@ db.exec(`
   )
 `);
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS admin_conversations (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    title      TEXT NOT NULL DEFAULT 'Admin Group Chat',
+    created_at TEXT DEFAULT (datetime('now'))
+  )
+`);
+
+db.exec(`
+  INSERT INTO admin_conversations (title)
+  SELECT 'Admin Group Chat'
+  WHERE NOT EXISTS (SELECT 1 FROM admin_conversations)
+`);
+
 module.exports = db;

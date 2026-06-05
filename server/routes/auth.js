@@ -33,15 +33,17 @@ router.post("/signup", async (req, res) => {
     .prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)")
     .run(name, email, hashedPassword);
 
+  const newUser = db
+    .prepare("SELECT account_type FROM users WHERE id = ?")
+    .get(result.lastInsertRowid);
+
   const token = jwt.sign(
-    { userId: result.lastInsertRowid, email },
+    { userId: result.lastInsertRowid, email, account_type: newUser.account_type },
     JWT_SECRET,
-    {
-      expiresIn: "7d",
-    },
+    { expiresIn: "7d" },
   );
 
-  res.status(201).json({ token, name, email });
+  res.status(201).json({ token, name, email, account_type: newUser.account_type });
 });
 
 // login
